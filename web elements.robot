@@ -13,3 +13,6 @@ ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    //label[text()="Role Code"]/../following-s
 ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}    //label[text()="Role Category"]/../following-sibling::*//input[not(@type="hidden")]
 ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}    //div[@class="AFPopupMenuPopup"]//li
 ${COMMON.BUTTON.NEXT}    //button[@title="Next" or @accesskey="x"]
+${CREATE_ROLE_PAGE.LABEL.FUNCTION_SECURITY_POLICIES}    //h1[contains(text(), "Function Security Policies")]
+${CREATE_ROLE_PAGE.LABEL.DATA_SECURITY_POLICIES}    //h1[contains(text(), "Data Security Policies")]
+${CREATE_ROLE_PAGE.LABEL.ROLE_HIERARCHY}    //h1[contains(text(), "Role Hierarchy")]
