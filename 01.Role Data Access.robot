@@ -87,19 +87,3 @@ Library           String
     Open Chrome Browser    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Security Console
-
-
-03 Create Migration User Account
-    Open Chrome Browser    ${ORACLE URL}
-    Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    Navigator To Link    Security Console
-
-04 Create Dashboard User Account
-    Open Chrome Browser    ${ORACLE URL}
-    Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    Navigator To Link    Security Console
-
-05 Create RDCConversion User Account
-    Open Chrome Browser    ${ORACLE URL}
-    Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    Navigator To Link    Security Console
