@@ -48,10 +48,12 @@ Navigator To Link
     [Arguments]    ${link name}
     Wait Exists And Click Element    ${COMMON.HEADER.NAVIGATOR}
     ${xpath}=    Set Variable    //a[text()='${link name}']
-    # Check if link exists
-    ${link element count}=    Get Element Count    ${xpath}
     # If link does not exist, click "More".
-    Run Keyword If    ${link element count}==0    Wait Exists And Click Element    ${ORACLE_HOME.LINK.MORE}
+    : FOR    ${i}    IN RANGE    1    5
+    \    ${link element count}=    Get Element Count    ${xpath}    # Check if link exists
+    \    Sleep    2s
+    \    Run Keyword If    ${link element count}==0    Wait Exists And Click Element    ${ORACLE_HOME.LINK.MORE}
+    \    Exit For Loop If    ${link element count}>0
     # Find the link and click it.
     Run Keyword If    "${link name}"=="Invoices"    Wait Exists And Click Element    ${ORACLE_HOME_NAVI.LINK.PAYABLES_INVOICES}
     ...    ELSE IF    "${link name}"=="Assets"    Wait Exists And Click Element    ${ORACLE_HOME_NAVI.LINK.FIXED_ASSETS_ASSETS}
