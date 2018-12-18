@@ -74,19 +74,19 @@ Library           String
     Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PAYROLL_FLOW}    View All Flows
     Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Organization Security Profile    ${ORGANIZATION.ELEMENT.VALUE}
-	Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Position Security Profile    ${POSITION.ELEMENT.VALUE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Legislative Data Group Security Profile    ${LEGISLATIVE_DATA_GROUP.ELEMENT.VALUE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Person Security Profile    ${PERSON.ELEMENT.VALUE}
-	Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Public Person Security Profile    ${PUBLIC_PERSON.ELEMENT.VALUE}
-	Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Document Type Security Profile    ${DOCUMENT_TYPE.ELEMENT.VALUE}
-	Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Payroll Flow Security Profile    ${PAYROLL_FLOW.ELEMENT.VALUE}
-	Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
 
 03 Create Migration User Account
