@@ -73,6 +73,7 @@ Library           String
     Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.DOCUMENT_TYPE}    View All Document Types
     Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PAYROLL_FLOW}    View All Flows
     Click Element    ${COMMON.BUTTON.NEXT}
+    # Veripy pages content
     Verify Page    Assign Security Profiles to Role: Organization Security Profile    ${ORGANIZATION.ELEMENT.VALUE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Position Security Profile    ${POSITION.ELEMENT.VALUE}
@@ -87,7 +88,10 @@ Library           String
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Verify Page    Assign Security Profiles to Role: Payroll Flow Security Profile    ${PAYROLL_FLOW.ELEMENT.VALUE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    # Submit data
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
+    # Logout Oralce
+    Logout Oracle
 
 03 Create Migration User Account
     Open Chrome Browser    ${ORACLE URL}
