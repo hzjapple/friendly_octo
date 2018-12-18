@@ -2,7 +2,7 @@
 Library           OperatingSystem
 Resource          variables.robot
 Resource          web elements.robot
-Resource          credential.robot
+Resource          credential.txt
 
 *** Keywords ***
 Click Element Until Added To Page
