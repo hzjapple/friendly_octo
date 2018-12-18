@@ -2,7 +2,7 @@
 Library           OperatingSystem
 Resource          variables.robot
 Resource          web elements.robot
-Resource          credential.robot
+Resource          credential.txt
 
 *** Keywords ***
 Click Element Until Added To Page
@@ -44,14 +44,23 @@ Login Oracle
     Input Password    ${LOGIN.PASSWORDBOX.LOGIN_PASSWD_TBOX}    ${pwd}
     Run Keyword And Continue On Failure    Wait Exists And Click Element    ${LOGIN.BUTTON.LOGIN_SIGNIN_BTN}
 
+Logout Oracle
+    #Logout of Oracle page
+    Wait Exists And Click Element    ${COMMON.BUTTON.COMMON_MENUARROW_BTN}
+    Sleep    3s
+    Wait Exists And Click Element    ${COMMON.BUTTON.COMMON_SIGNOUT_BTN}
+    Wait Exists And Click Element    ${LOGOUT.BUTTON.LOGOUT_CONFIRM_BTN}
+
 Navigator To Link
     [Arguments]    ${link name}
     Wait Exists And Click Element    ${COMMON.HEADER.NAVIGATOR}
     ${xpath}=    Set Variable    //a[text()='${link name}']
-    # Check if link exists
-    ${link element count}=    Get Element Count    ${xpath}
     # If link does not exist, click "More".
-    Run Keyword If    ${link element count}==0    Wait Exists And Click Element    ${ORACLE_HOME.LINK.MORE}
+    : FOR    ${i}    IN RANGE    1    5
+    \    ${link element count}=    Get Element Count    ${xpath}    # Check if link exists
+    \    Sleep    2s
+    \    Exit For Loop If    ${link element count}>0
+    \    Run Keyword If    ${link element count}==0    Wait Exists And Click Element    ${ORACLE_HOME.LINK.MORE}
     # Find the link and click it.
     Run Keyword If    "${link name}"=="Invoices"    Wait Exists And Click Element    ${ORACLE_HOME_NAVI.LINK.PAYABLES_INVOICES}
     ...    ELSE IF    "${link name}"=="Assets"    Wait Exists And Click Element    ${ORACLE_HOME_NAVI.LINK.FIXED_ASSETS_ASSETS}
