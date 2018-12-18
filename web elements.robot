@@ -1,9 +1,11 @@
 *** Variables ***
 ${COMMON.BUTTON.CANCEL}    //button[@title="Cancel" or @accesskey="C"]
+${COMMON.BUTTON.DIALOG_CLOSE}    //a[@title="Close" and not(ancestor::div[@style="display:none"])]
 ${COMMON.BUTTON.NEXT}    //button[@title="Next" or @accesskey="x"]
 ${COMMON.BUTTON.OK}    //button[text()="OK"]
-${COMMON.BUTTON.SAVE_AND_CLOSE}    ////button[@title="Save and Close" or @accesskey="S"]
+${COMMON.BUTTON.SAVE_AND_CLOSE}    //button[@title="Save and Close" or @accesskey="S"]
 ${COMMON.HEADER.NAVIGATOR}    //a[@title='Navigator']
+${COMMON.LABEL.CONFIRMATION}    //div[text()="Confirmation" and not(ancestor::div[@style="display:none"])]
 ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}    //button[text()="Add Role Membership"]
 ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE}    //span[text()="Add Role"]
 ${CREATE_ROLE_PAGE.BUTTON.SEARCH}    //img[@title="Search"]

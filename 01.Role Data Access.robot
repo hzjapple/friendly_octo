@@ -16,7 +16,7 @@ Library           String
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
     # Fill "Role Name", "Role Code", "Role Category"
     Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_NAME}    PwC Custom View Custom Infolet
-    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    PWC_CUSTOM_VIEW_CUSTOM_INFOLET2
+    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    PWC_CUSTOM_VIEW_CUSTOM_INFOLET3
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}[text()="Common - Job Roles"]
     # Click [Next] until "Role Hierarchy" tab
@@ -36,8 +36,9 @@ Library           String
     Wait Exists And Click Element    ${dynamic_xpath}
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
     # Click Ok and Next Until Save and Close
-    Click Element Until Deleted From Page    ${COMMON.BUTTON.OK}
-    Click Element Until Deleted From Page    ${COMMON.BUTTON.CANCEL}
+    Wait Exists And Click Element    ${COMMON.BUTTON.OK}
+    Wait Until Page Does Not Contain Element    ${COMMON.LABEL.CONFIRMATION}
+    Click Element Until Deleted From Page    ${COMMON.BUTTON.DIALOG_CLOSE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.USERS}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
