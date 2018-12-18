@@ -16,7 +16,7 @@ Library           String
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
     # Fill "Role Name", "Role Code", "Role Category"
     Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_NAME}    PwC Custom View Custom Infolet
-    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    PWC_CUSTOM_VIEW_CUSTOM_INFOLET3
+    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    PWC_CUSTOM_VIEW_CUSTOM_INFOLET4
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}[text()="Common - Job Roles"]
     # Click [Next] until "Role Hierarchy" tab
@@ -44,6 +44,7 @@ Library           String
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.SUMMARY}
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    Logout Oracle
 
 02 Create HCM Data Role
     Open Chrome Browser    ${ORACLE URL}

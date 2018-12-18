@@ -44,6 +44,13 @@ Login Oracle
     Input Password    ${LOGIN.PASSWORDBOX.LOGIN_PASSWD_TBOX}    ${pwd}
     Run Keyword And Continue On Failure    Wait Exists And Click Element    ${LOGIN.BUTTON.LOGIN_SIGNIN_BTN}
 
+Logout Oracle
+    #Logout of Oracle page
+    Wait Exists And Click Element    ${COMMON.BUTTON.COMMON_MENUARROW_BTN}
+    Sleep    3s
+    Wait Exists And Click Element    ${COMMON.BUTTON.COMMON_SIGNOUT_BTN}
+    Wait Exists And Click Element    ${LOGOUT.BUTTON.LOGOUT_CONFIRM_BTN}
+
 Navigator To Link
     [Arguments]    ${link name}
     Wait Exists And Click Element    ${COMMON.HEADER.NAVIGATOR}
