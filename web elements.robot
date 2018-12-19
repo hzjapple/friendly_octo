@@ -55,7 +55,6 @@ ${POSITION.TEXT.POSITION_SECURITY_PROFILE}    //label[text()='Position Security 
 ${PUBLIC_PERSON.ELEMENT.VALUE}    //input[@value = 'View All People']
 ${PUBLIC_PERSON.TEXT.PUBLIC_PERSON}    //label[text()='Person Security Profile']/../following-sibling::*//input
 ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}    //button[text()="Create Role"]
-${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}    //button[text()="Create Role"]
 ${SECURITY_CRITERIA.TEXT.DOCUMENT_TYPE}    //label[text()='Document Type Security Profile']/../following-sibling::*//input
 ${SECURITY_CRITERIA.TEXT.LEGISLATIVE_DATA_GROUP}    //label[text()='LDG Security Profile']/../following-sibling::*//input
 ${SECURITY_CRITERIA.TEXT.ORGANIZATION_SECURITY_PROFILE}    //label[text()='Organization Security Profile']/../following-sibling::*//input
