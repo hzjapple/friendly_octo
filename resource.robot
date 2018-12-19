@@ -114,11 +114,11 @@ Scroll To Element
     Execute Javascript    window.scrollBy(${x}, ${y});
 
 Wait Exists And Click Element
-    [Arguments]    ${locator}
+    [Arguments]    ${locator}    ${time out}=5
     # Wait and frontend loading exception handling
     Wait Until Page Contains Element    ${locator}
     #Wait Until Element Is Visible    ${locator}
-    : FOR    ${i}    IN RANGE    1    5
+    : FOR    ${i}    IN RANGE    1    ${time out}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Click Element    ${locator}
     \    Exit For Loop If    '${result}'=='PASS' or """StaleElementReferenceException""" not in """${returnvalue}"""
     \    Sleep    0.5
@@ -152,6 +152,15 @@ Open Chrome Browser With useAutomationExtension
     Go To    ${URL}
 
 Verify Page
-    [Arguments]    ${page_title}    ${page_element_locator}
-    Wait Until Page Contains    ${page_title}
-    Wait Until Page Contains Element    ${page_element_locator}
+    [Arguments]    ${page title}    ${page element locator}
+    Wait Until Page Contains    ${page title}
+    Wait Until Page Contains Element    ${page element locator}
+
+Verify Element Be Clicked
+    [Arguments]    ${xpath}
+    # If element exist, click it.
+    : FOR    ${i}    IN RANGE    1    5
+    \    ${element count}=    Get Element Count    ${xpath}    # Check if element exists
+    \    Sleep    2s
+    \    Exit For Loop If    ${element count}==0
+    \    Run Keyword If    ${element count}>0    Wait Exists And Click Element    ${xpath}
