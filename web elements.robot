@@ -63,7 +63,6 @@ ${SECURITY_CRITERIA.TEXT.PERSON}    //td[.//h3[text() = 'Person']]//label[text()
 ${SECURITY_CRITERIA.TEXT.POSITION_SECURITY_PROFILE}    //label[text()='Position Security Profile']/../following-sibling::*//input
 ${SECURITY_CRITERIA.TEXT.PUBLIC_PERSON}    //td[.//h3[text() = 'Public Person']]//label[text()='Person Security Profile']/../following-sibling::*//input
 ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}    //*[text()="Security Console"]
-${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}    //*[text()="Security Console"]
 ${SETUP.ELEMENT.FINANCIAL_LOAD}    //td[text()='Cash Management and Banking']
 ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}    //a[text()='Manage Data Role and Security Profiles']
 ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}    //td[text() ="Users and Security"]
