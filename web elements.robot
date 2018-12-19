@@ -50,6 +50,7 @@ ${PAYROLL_FLOW.ELEMENT.VALUE}    //input[@value = 'View All Flows']
 ${PAYROLL_FLOW.TEXT.PAYROLL_FLOW}    //label[text()='Flow Pattern Security Profile']/../following-sibling::*//input
 ${PERSON.ELEMENT.VALUE}    //input[@value = 'View All People']
 ${PERSON.TEXT.PERSON}    //label[text()='Person Security Profile']/../following-sibling::*//input
+${POPUPMENU.H1.NAVIGATOR}    //h1[text()="Navigator"]
 ${POSITION.ELEMENT.VALUE}    //input[@value = 'View All Positions']
 ${POSITION.TEXT.POSITION_SECURITY_PROFILE}    //label[text()='Position Security Profile']/../following-sibling::*//input
 ${PUBLIC_PERSON.ELEMENT.VALUE}    //input[@value = 'View All People']

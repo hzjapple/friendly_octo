@@ -6,9 +6,9 @@ Resource          credential.txt
 
 *** Keywords ***
 Click Element Until Added To Page
-    [Arguments]    ${locator}    ${locator_added}    ${max_retry}=30
+    [Arguments]    ${locator}    ${locator_added}    ${max retry}=30
     # Retry 30 times by default
-    : FOR    ${i}    IN RANGE    1    ${max_retry}
+    : FOR    ${i}    IN RANGE    1    ${max retry}
     \    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}
     \    Run Keyword And Ignore Error    Click Element    ${locator}
     \    Sleep    1s
@@ -16,9 +16,9 @@ Click Element Until Added To Page
     \    Exit For Loop If    '${result}'=='PASS'
 
 Click Element Until Deleted From Page
-    [Arguments]    ${locator}    ${max_retry}=30
+    [Arguments]    ${locator}    ${max retry}=30
     # Retry 30 times by default
-    : FOR    ${i}    IN RANGE    1    ${max_retry}
+    : FOR    ${i}    IN RANGE    1    ${max retry}
     \    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}
     \    Run Keyword And Ignore Error    Click Element    ${locator}
     \    Sleep    1s
@@ -53,7 +53,8 @@ Logout Oracle
 
 Navigator To Link
     [Arguments]    ${link name}
-    Wait Exists And Click Element    ${COMMON.HEADER.NAVIGATOR}
+    # Click Navigator Icon until Popup Mune exists
+    Click Element Until Added To Page    ${COMMON.HEADER.NAVIGATOR}    ${POPUPMENU.H1.NAVIGATOR}    5
     ${xpath}=    Set Variable    //a[text()='${link name}']
     # If link does not exist, click "More".
     : FOR    ${i}    IN RANGE    1    5
