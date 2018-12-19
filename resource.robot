@@ -137,3 +137,20 @@ Wait Until File Download Complete
     \    Sleep    1s
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    File Should Exist    ${path}${/}${filename}
     \    Exit For Loop If    '${result}'=='PASS'
+
+Open Chrome Browser With useAutomationExtension
+    [Arguments]    ${URL}
+    [Documentation]    Opens _Google Chrome_ to a given web page.
+    ...    For more information on what capabilities that _Google Chrome_
+    ...    supports, see [https://sites.google.com/a/chromium.org/chromedriver/capabilities%7Cthis Capabilities & ChromeOptions page].
+    ${chrome_options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
+    Call Method    ${chrome_options}    add_argument    --start-maximized
+    Call Method    ${chrome_options}    add_experimental_option    useAutomationExtension    ${False}
+    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    # Maximize Browser Window    # doesn't work under XVFB
+    Go To    ${URL}
+
+Verify Page
+    [Arguments]    ${page_title}    ${page_element_locator}
+    Wait Until Page Contains    ${page_title}
+    Wait Until Page Contains Element    ${page_element_locator}
