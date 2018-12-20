@@ -114,23 +114,27 @@ Scroll To Element
     Execute Javascript    window.scrollBy(${x}, ${y});
 
 Wait Exists And Click Element
-    [Arguments]    ${locator}    ${time out}=5
+    [Arguments]    ${locator}
     # Wait and frontend loading exception handling
     Wait Until Page Contains Element    ${locator}
     #Wait Until Element Is Visible    ${locator}
-    : FOR    ${i}    IN RANGE    1    ${time out}
-    \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Click Element    ${locator}
-    \    Exit For Loop If    '${result}'=='PASS' or """StaleElementReferenceException""" not in """${returnvalue}"""
+    : FOR    ${i}    IN RANGE    1    5
     \    Sleep    0.5
+    \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Click Element    ${locator}
+    \    Continue For Loop If    """StaleElementReferenceException""" in """${returnvalue}"""
+    \    Continue For Loop If    """ElementNotVisibleException""" in """${returnvalue}"""
+    \    Exit For Loop If    '${result}'=='PASS'
 
 Wait Exists And Input Text
     [Arguments]    ${locator}    ${text}
     # Wait and frontend loading exception handling
     Wait Until Page Contains Element    ${locator}
     : FOR    ${i}    IN RANGE    1    5
-    \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Input Text    ${locator}    ${text}
-    \    Exit For Loop If    '${result}'=='PASS' or """StaleElementReferenceException""" not in """${returnvalue}"""
     \    Sleep    0.5
+    \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Input Text    ${locator}    ${text}
+    \    Continue For Loop If    """StaleElementReferenceException""" in """${returnvalue}"""
+    \    Continue For Loop If    """ElementNotVisibleException""" in """${returnvalue}"""
+    \    Exit For Loop If    '${result}'=='PASS'
 
 Wait Until File Download Complete
     [Arguments]    ${path}    ${filename}    ${timeout}=30
