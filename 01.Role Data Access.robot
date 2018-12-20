@@ -56,8 +56,8 @@ Library           String
     Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
     Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
     Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
-    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}    10
-    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}    10
+    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
+    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}
     # Create Custom Role
     Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
     Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.DATA_ROLE}    Custom HCM Data Role
@@ -89,14 +89,67 @@ Library           String
     Verify Page    Assign Security Profiles to Role: Payroll Flow Security Profile    ${PAYROLL_FLOW.ELEMENT.VALUE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     # Submit data
+    Verify Page    Create Data Role: Review    ${COMMON.BUTTON.SUBMIT}
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
+    # Search the role to ensure its status is 'Requested'
+    #Wait Exists And Click Element    //h1[text() ='Manage Data Roles and Security Profiles']
+    Wait Exists And Input Text    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_ROLE}    Custom HCM Data Role
+    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.SEARCH}
+    Wait Until Page Contains Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_RESULT}
+    Page Should Contain Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.ROLE_STATUS}
     # Logout Oralce
     Logout Oracle
 
 03 Create Migration User Account
-    Open Chrome Browser    ${ORACLE URL}
+    #Open Chrome Browser    ${ORACLE URL}
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Security Console
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    # Add User and fill information
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.ADD_USER_ACCOUNT}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.FIRST_NAME}    RDC
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.LAST_NAME}    Analyst
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.EMAIL}    nita.ye@pwc.com
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.USER_NAME}    RDCAnalyst
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    Welcome1
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    Welcome1
+    # Open Add Roles page
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
+    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    Employee
+    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.EMPLOYEE_ROLE_CODE}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
+    #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    Application Implementation Consultant
+    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.APPLICATION_IMPLEMENTATION_CONSULTANT_ROLE_CODE}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    #sleep    3s
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
+    #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    PwC Custom BI Administrator Role
+    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.PWC_CUSTOM_BI_ADMINISTRATOR_ROLE_CODE}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
+    #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    PwC Custom View Custom Infolet
+    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.PWC_CUSTOM_VIEW_ACUSTOM_INFOLET_ROLE_CODE}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
+    # Save role and then close
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Logout Oralce
+    Logout Oracle
 
 04 Create Dashboard User Account
     Open Chrome Browser    ${ORACLE URL}
