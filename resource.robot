@@ -6,22 +6,22 @@ Resource          credential.txt
 
 *** Keywords ***
 Click Element Until Added To Page
-    [Arguments]    ${locator}    ${locator_added}    ${max retry}=30
+    [Arguments]    ${locator}    ${locator_added}    ${max retry}=30    ${wait}=1s
     # Retry 30 times by default
     : FOR    ${i}    IN RANGE    1    ${max retry}
     \    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}
     \    Run Keyword And Ignore Error    Click Element    ${locator}
-    \    Sleep    1s
+    \    Sleep    ${wait}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Page Should Contain Element    ${locator_added}
     \    Exit For Loop If    '${result}'=='PASS'
 
 Click Element Until Deleted From Page
-    [Arguments]    ${locator}    ${max retry}=30
+    [Arguments]    ${locator}    ${max retry}=30    ${wait}=1s
     # Retry 30 times by default
     : FOR    ${i}    IN RANGE    1    ${max retry}
     \    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}
     \    Run Keyword And Ignore Error    Click Element    ${locator}
-    \    Sleep    1s
+    \    Sleep    ${wait}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Page Should Not Contain Element    ${locator}
     \    Exit For Loop If    '${result}'=='PASS'
 
