@@ -2,7 +2,6 @@
 Suite Teardown    CloseDriverserver
 Library           Selenium2Library    timeout=30s    implicit_wait=2s
 Resource          resource.robot
-#Library    SeleniumLibrary    timeout=30s    implicit_wait=2s
 Library           String
 
 *** Test Cases ***
@@ -123,12 +122,7 @@ Library           String
     Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.EMPLOYEE_ROLE_CODE}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    #sleep    2s
-    Wait Exists And Click Element    ${COMMON.BUTTON.OK}    10
-    Verify Element Be Clicked    ${COMMON.BUTTON.OK}
-    #sleep    1s
-    #Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
-    #Verify Element Be Clicked    ${COMMON.BUTTON.DONE}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
     # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
     #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    Application Implementation Consultant
@@ -136,33 +130,22 @@ Library           String
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.APPLICATION_IMPLEMENTATION_CONSULTANT_ROLE_CODE}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
     #sleep    3s
-    Wait Exists And Click Element    ${COMMON.BUTTON.OK}    10
-    Verify Element Be Clicked    ${COMMON.BUTTON.OK}
-    #sleep    1s
-    #Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
     # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
     #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    PwC Custom BI Administrator Role
     Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.PWC_CUSTOM_BI_ADMINISTRATOR_ROLE_CODE}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    #sleep    2s
-    Wait Exists And Click Element    ${COMMON.BUTTON.OK}    10
-    Verify Element Be Clicked    ${COMMON.BUTTON.OK}
-    #sleep    1s
-    #Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
     # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
     #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    PwC Custom View Custom Infolet
     Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.PWC_CUSTOM_VIEW_ACUSTOM_INFOLET_ROLE_CODE}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    #sleep    2s
-    Wait Exists And Click Element    ${COMMON.BUTTON.OK}    10
-    Verify Element Be Clicked    ${COMMON.BUTTON.OK}
-    #sleep    1s
-    Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
-    sleep    1s
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce

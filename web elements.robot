@@ -89,4 +89,4 @@ ${COMMON.BUTTON.DONE}    //button[text()='Done' or @title='Done' or @accesskey =
 ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_ROLE}    //label[text()="Role"]/../following-sibling::*//input
 ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.SEARCH}    //button[text()="Search"]
 ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_RESULT}    //table[@summary = "Search Results"]//tr[.//span[text() ='Custom HCM Data Role']]
-${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.ROLE_STATUS}    //table[@summary = "Search Results"]//tr[.//span[text() ='Custom HCM Data Role']]//span[text()="Requested"]
+${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.ROLE_STATUS}    //table[@summary = "Search Results"]//tr[.//span[text() ='Custom HCM Data Role']]//span[text()="Complete"]
