@@ -90,3 +90,50 @@ ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_ROLE}    //label[text()="Ro
 ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.SEARCH}    //button[text()="Search"]
 ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_RESULT}    //table[@summary = "Search Results"]//tr[.//span[text() ='Custom HCM Data Role']]
 ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.ROLE_STATUS}    //table[@summary = "Search Results"]//tr[.//span[text() ='Custom HCM Data Role']]//span[text()="Complete"]
+${SEARCH_PERSON.BUTTON.CREATE_PERSON}    //img[@title = 'Create' or @alt ='Create']
+${CREATE_USER_PAGE.TEXT.LAST_NAME}    //label[text()='Last Name']/../following-sibling::*//input
+${CREATE_USER_PAGE.TEXT.FIRST_NAME}    //label[text()='First Name']/../following-sibling::*//input
+${CREATE_USER_PAGE.TEXT.USER_NAME}    //label[text()='User Name']/../following-sibling::*//input
+${CREATE_USER_PAGE.TEXT.PERSON_TYPE}    //label[text()='Person Type']/../following-sibling::*//input
+${CREATE_USER_PAGE.LIST.PERSON_TYPE_LIST}    //label[text()='Person Type']/../following-sibling::*//a
+${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}    //li[text()='Employee']
+${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    //label[text()='Legal Employer']/../following-sibling::*//input
+${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    //label[text()='Business Unit']/../following-sibling::*//input
+${CREATE_USER_PAGE.TEXT.EMAIL}    //label[text()='Email']/../following-sibling::*//input
+${USER_ACCOUNT_PAGE.TEXT.SEARCH_USER_NAME}    //label[text()='Search']/preceding-sibling::input
+${USER_ACCOUNT_PAGE.BUTTON.SEARCH}    //img[@title ='Search' or @alt='Search']
+${USER_ACCOUNT_PAGE.LINK.USER}    //a[text()='Dashboard RDC']
+${USER_ACCOUNT_PAGE.BUTTON.EDIT}    //button[text()='Edit']
+${USER_ACCOUNT_PAGE.TEXT.ORA_AP_ACCOUNTS_PAYABLE_MANAGER_JOB_ROLE_CODE}    //td[text()='ORA_AP_ACCOUNTS_PAYABLE_MANAGER_JOB']
+${USER_ACCOUNT_PAGE.TEXT.ORA_GL_GENERAL_ACCOUNTING_MANAGER_JOB_ROLE_CODE}    //td[text()='ORA_GL_GENERAL_ACCOUNTING_MANAGER_JOB']
+${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    //td[text()='replace_role_code']
+${SETUP.TEXT.SEARCH_TASK}    //label[text()='Search Tasks']/../following-sibling::*//input
+${SETUP.BUTTON.SEARCH}    //img[@title ='Search' or @alt='Search']
+${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}    //a[text()='Manage Data Access for Users']
+${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}    //label[text()='Users with Data Access']
+${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    //label[text()='User Name']/../following-sibling::*//input[not(ancestor::div[@style="display:none"])]
+${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}    //button[text()='Search' and not(ancestor::div[@style="display:none"])]
+${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}    //img[@title = 'Create' or @alt ='Create']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}    (//label[text()='User Name']/preceding-sibling::input)[1]
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_VERIVY}    //label[text()='User Name']/preceding-sibling::input[@title='verify_user_name_to_be_replaced']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE}    (//label[text()='Role']/preceding-sibling::input)[1]
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    (//label[text()='Security Context']/preceding-sibling::select)[1]
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}    (//label[text()='Security Context Value']/preceding-sibling::input)[1]
+${CREATE_USER_PAGE.BUTTON.SAVE_AND_CLOSE}    //span[text()='Save and Close']
+${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}    //img[@title = 'Add Row' or @alt='Add Row']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_ITEM}    //div[contains(@class,"AFPopupMenuPopup")]//li[text()='data_access_user_name_to_be_replaced']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_ITEM}    //div[contains(@class,"AFPopupMenuPopup")]//li[text()='data_access_role_name_to_be_replaced']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.CONTEXT_SECURITY_VALUE_ITEM}    //div[contains(@class,"AFPopupMenuPopup")]//li[text()='data_access_security_context_value_to_be_replaced']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_LIST}    //a[@title='Search: User Name']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_MORE}    //a[text()='Search...' and not(ancestor::div[@style="display:none"])]
+${SERACH_USER_PAGE.TEXT_USER_NAME}    //table[.//div[text()='Search and Select: User Name']]//label[text()='User Name']/../following-sibling::*//input[not(ancestor::div[@style="display:none"])]
+${SERACH_USER_PAGE.BUTTON.SEARCH}    //table[.//div[text()='Search and Select: User Name']]//button[text()='Search']
+${SERACH_USER_PAGE.BUTTON.USER_NAME_ITEM}    //table[.//div[text()='Search and Select: User Name']]//span[text()='RDCDashboard']
+${SERACH_USER_PAGE.BUTTON.OK}    //table[.//div[text()='Search and Select: User Name']]//button[text()='OK']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_LIST}    //a[@title='Search: Role']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_MORE}    //a[text()='Search...' and not(ancestor::div[@style="display:none"])]
+${SERACH_USER_ROLE_PAGE.TEXT_ROLE_NAME}    //table[.//div[text()='Search and Select: Role']]//label[text()='Role']/../following-sibling::*//input[not(ancestor::div[@style="display:none"])]
+${SERACH_USER_ROLE_PAGE.BUTTON.SEARCH}    //table[.//div[text()='Search and Select: Role']]//button[text()='Search']
+${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    //table[.//div[text()='Search and Select: Role']]//span[text()='Accounts Receivable Manager']
+${SERACH_USER_ROLE_PAGE.BUTTON.OK}    //table[.//div[text()='Search and Select: Role']]//button[text()='OK']
+
