@@ -1,6 +1,6 @@
 *** Settings ***
 Suite Teardown    CloseDriverserver
-Library           SeleniumLibrary    timeout=30s    implicit_wait=2s
+Library           Selenium2Library    timeout=30s    implicit_wait=2s
 Resource          resource.robot
 Library           String
 
@@ -118,42 +118,38 @@ Library           String
     # Open Add Roles page
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
-    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    Employee
-    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.EMPLOYEE_ROLE_CODE}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Add Role    Employee    ORA_PER_EMPLOYEE_ABSTRACT
     # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
-    #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
-    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    Application Implementation Consultant
-    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.APPLICATION_IMPLEMENTATION_CONSULTANT_ROLE_CODE}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    #sleep    3s
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Add Role    Application Implementation Consultant    ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB
     # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
-    #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
-    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    PwC Custom BI Administrator Role
-    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.PWC_CUSTOM_BI_ADMINISTRATOR_ROLE_CODE}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Add Role    PwC Custom BI Administrator Role    PWC_CUSTOM_BI_ADMINISTRATOR_ROLE
     # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
-    #Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
-    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    PwC Custom View Custom Infolet
-    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.TEXT.PWC_CUSTOM_VIEW_ACUSTOM_INFOLET_ROLE_CODE}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Add Role    PwC Custom View Custom Infolet    PWC_CUSTOM_VIEW_CUSTOM_INFOLET
+    # Add Roles are completed and then click Done button to back Edit page
     Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce
     Logout Oracle
 
-14 Create Dashboard User Account
+04 Create Dashboard User Account
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
+    Navigator To Link    Users and Roles
+    # Add person
+    Wait Exists And Click Element    ${SEARCH_PERSON.BUTTON.CREATE_PERSON}
+    Wait Until Page Contains    Create User
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LAST_NAME}    RDC
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.FIRST_NAME}    Dashboard
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.USER_NAME}    RDCDashboard
+    Wait Exists And Click Element    ${CREATE_USER_PAGE.LIST.PERSON_TYPE_LIST}
+    Wait Exists And Click Element    ${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    US1 Legal Entity    20    #PG US West cannot be found
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    BU1    #11000 cannot be found
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.EMAIL}    chaitanya.jain@pwc.com
+    # Save and Close
+    Wait Exists And Click Element    ${CREATE_USER_PAGE.BUTTON.SAVE_AND_CLOSE}
+    # Open Edit Roles page
     Navigator To Link    Security Console
     Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
@@ -176,7 +172,7 @@ Library           String
     Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    # Step 7 - Grant access role
+        # Step 7 - Grant access role
     Navigator To Link    Setup and Maintenance
     # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
     Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
@@ -184,71 +180,13 @@ Library           String
     Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
     Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
     Wait Exists And Input Text    ${SETUP.TEXT.SEARCH_TASK}    Manage Data Access for Users
+    Wait Exists And Click Element    ${SETUP.BUTTON.SEARCH}
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
     Wait Until Page Contains    Manage Data Access for Users
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
-    Wait Exists And Input Text    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
-    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
-    # Add data access to Role with unit
-    Grant Data Access to User Role    RDCDashboard    Accounts Payable Manager    Business unit    PWC US BU    # PwC South Africa cannot be found
-    Grant Data Access to User Role    RDCDashboard    Accounts Receivable Manager    Business unit    PWC US BU    # PwC South Africa cannot be found
-    # Save role and then close
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    # Logout Oralce
-    Logout Oracle
-
-04 Create Dashboard User Account
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
-    Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    Navigator To Link    Users and Roles
-    # Add person
-    Wait Exists And Click Element    ${SEARCH_PERSON.BUTTON.CREATE_PERSON}
-    Wait Until Page Contains    Create User
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LAST_NAME}    RDC5
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.FIRST_NAME}    Dashboard5
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.USER_NAME}    RDCDashboard5
-    Wait Exists And Click Element    ${CREATE_USER_PAGE.LIST.PERSON_TYPE_LIST}
-    Wait Exists And Click Element    ${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    US1 Legal Entity    20    #PG US West cannot be found
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    BU1    #11000 cannot be found
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.EMAIL}    chaitanya.jain@pwc.com
-    # Save and Close
-    Wait Exists And Click Element    ${CREATE_USER_PAGE.BUTTON.SAVE_AND_CLOSE}
-    # Open Edit Roles page
-    Navigator To Link    Security Console
-    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
-    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
-    # Search Users
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.LINK.USER}
-    Wait Until Page Contains    User Account Details: Dashboard RDC
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.EDIT}
-    # Open Add Roles page
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
-    # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
-    Add Role    Employee    ORA_PER_EMPLOYEE_ABSTRACT
-    # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
-    Add Role    Application Implementation Consultant    ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB
-    # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
-    Add Role    PwC Custom View Custom Infolet    PWC_CUSTOM_VIEW_CUSTOM_INFOLET
-    # Add Roles are completed and then click Done button to back Edit page
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
-    # Save role and then close
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    # Step 7 - Grant access role
-    Navigator To Link    Setup and Maintenance
-    # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
-    Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
-    Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
-    Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
-    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
-    Wait Exists And Input Text    ${SETUP.TEXT.SEARCH_TASK}    Manage Data Access for Users
-    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
-    Wait Until Page Contains    Manage Data Access for Users    1
-    Select Radio Button    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
-    Wait Exists And Input Text    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
-    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
+    #Wait Exists And Input Text    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
+    #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
     # Add data access to Role with unit
     Grant Data Access to User Role    RDCDashboard    Accounts Payable Manager    Business unit    PWC US BU    # PwC South Africa cannot be found
     Grant Data Access to User Role    RDCDashboard    Accounts Receivable Manager    Business unit    PWC US BU    # PwC South Africa cannot be found
@@ -258,6 +196,31 @@ Library           String
     Logout Oracle
 
 05 Create RDCConversion User Account
-    Open Chrome Browser    ${ORACLE URL}
+    #Open Chrome Browser    ${ORACLE URL}
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Security Console
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    # Add User and fill information
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.ADD_USER_ACCOUNT}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.FIRST_NAME}    RDC
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.LAST_NAME}    Conversion
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.EMAIL}    chaitanya.jain@pwc.com
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.USER_NAME}    RDCConversion
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    Welcome1
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    Welcome1
+    # Open Add Roles page
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
+    Add Role    Employee    ORA_PER_EMPLOYEE_ABSTRACT
+    # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
+    Add Role    Application Implementation Consultant    ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB
+    # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
+    Add Role    PwC Custom BI Administrator Role    PWC_CUSTOM_BI_ADMINISTRATOR_ROLE
+    # Add Roles are completed and then click Done button to back Edit page
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
+    # Save role and then close
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Logout Oralce
+    Logout Oracle

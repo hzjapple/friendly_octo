@@ -131,7 +131,9 @@ Wait Exists And Input Text
     Wait Until Page Contains Element    ${locator}
     : FOR    ${i}    IN RANGE    1    ${time_out}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Input Text    ${locator}    ${text}
-    \    Exit For Loop If    '${result}'=='PASS' or """StaleElementReferenceException""" not in """${returnvalue}"""
+    \    Continue For Loop If    """StaleElementReferenceException""" in """${returnvalue}"""
+    \    Continue For Loop If    """ElementNotVisibleException""" in """${returnvalue}"""
+    \    Exit For Loop If    '${result}'=='PASS'
     \    Sleep    0.5
 
 Wait Until File Download Complete
@@ -164,7 +166,7 @@ Wait Until Element Be Clicked
     Wait Exists And Click Element    ${xpath}
     : FOR    ${i}    IN RANGE    1    5
     \    ${element count}=    Get Element Count    ${xpath}    # Check if element exists
-    \    Sleep    2s
+    \    Sleep    1s
     \    Exit For Loop If    ${element count}==0
     \    Run Keyword If    ${element count}>0    Wait Exists And Click Element    ${xpath}
 
@@ -175,15 +177,32 @@ Add Role
     Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
     ${dynamic_role_code_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    replace_role_code    ${role_code}   
     Wait Exists And Click Element    ${dynamic_role_code_xpath}
-    sleep 2s
+    Sleep    2s
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
     Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
 
 Grant Data Access to User Role
-    [Arguments]    ${use_name}    ${role_name}    ${security_context}    ${security_context_value}
-    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
-    Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}    ${use_name}
+    [Arguments]    ${user_name}    ${role_name}    ${security_context}    ${security_context_value}
+    Wait Until Page Contains    Create Data Access for Users
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
+    # Input user name
+    Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}    ${user_name}
+    # Verify user name
+    #${dynamic_verify_user_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_VERIVY}    verify_user_name_to_be_replaced    ${user_name}
+    #Wait Until Page Contains Element    ${dynamic_verify_user_name_xpath}
+    # Click user name from dropdown list
+    #${dynamic_user_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_ITEM}    data_access_user_name_to_be_replaced    ${user_name}
+    #Wait Exists And Click Element    ${dynamic_user_name_xpath}
+    # design method to avlid sleep
+    Sleep    15s
     Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE}    ${role_name}
+    ${dynamic_role_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_ITEM}    data_access_role_name_to_be_replaced    ${role_name}
+    Wait Exists And Click Element    ${dynamic_role_name_xpath}
+
+    Sleep    15s
     Select From List By Label   ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
+    Sleep    15s
     Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}    ${security_context_value}
+    ${dynamic_security_context_value_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.CONTEXT_SECURITY_VALUE_ITEM}    data_access_security_context_value_to_be_replaced    ${security_context_value}
+    Wait Exists And Click Element    ${dynamic_security_context_value_xpath} 
 
