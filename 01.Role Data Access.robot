@@ -56,8 +56,8 @@ Library           String
     Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
     Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
     Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
-    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
-    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}
+    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}    10
+    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}    10
     # Create Custom Role
     Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
     Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.DATA_ROLE}    Custom HCM Data Role
@@ -89,20 +89,12 @@ Library           String
     Verify Page    Assign Security Profiles to Role: Payroll Flow Security Profile    ${PAYROLL_FLOW.ELEMENT.VALUE}
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     # Submit data
-    Verify Page    Create Data Role: Review    ${COMMON.BUTTON.SUBMIT}
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
-    # Search the role to ensure its status is 'Requested'
-    #Wait Exists And Click Element    //h1[text() ='Manage Data Roles and Security Profiles']
-    Wait Exists And Input Text    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_ROLE}    Custom HCM Data Role
-    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.SEARCH}
-    Wait Until Page Contains Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_RESULT}
-    Page Should Contain Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.ROLE_STATUS}
     # Logout Oralce
     Logout Oracle
 
 03 Create Migration User Account
-    #Open Chrome Browser    ${ORACLE URL}
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Security Console
     Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
