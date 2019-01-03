@@ -155,9 +155,9 @@ Open Chrome Browser With useAutomationExtension
     Go To    ${URL}
 
 Verify Page
-    [Arguments]    ${page title}    ${page element locator}
+    [Arguments]    ${page title}    ${page element value}
     Wait Until Page Contains    ${page title}
-    Wait Until Page Contains Element    ${page element locator}
+    Wait Until Page Contains    ${page element value}
 
 Wait Until Element Be Clicked
     [Arguments]    ${xpath}

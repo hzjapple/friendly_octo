@@ -23,7 +23,7 @@ ${role_excel_file}    custom_role_info.xls
     # Open Excel file
     Open Excel    ${role_excel_file}
 
-    ${sheet_name}=    Set Variable    case1-Create-HCM-Data-Role
+    ${sheet_name}=    Set Variable    case1-Create-Custom-Job-Role
     ${r_cnt}    Get Row Count    ${sheet_name}
     : FOR    ${r}    IN RANGE    1    ${r_cnt}
     \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
@@ -40,8 +40,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 02 Create HCM Data Roles
-    #Open Chrome Browser    ${ORACLE URL}
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Setup and Maintenance
@@ -51,39 +50,30 @@ ${role_excel_file}    custom_role_info.xls
     Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
     Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}    10
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}    10
-    # Create Custom Role
-    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
-    Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.DATA_ROLE}    Custom HCM Data Role
-    Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.JOB_ROLE}    Human Resource Analyst
-    Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.ROLE_DESCRIPTION}    Custom HCM Data Role Data for inheriting 'Human Resource Analyst' Job Role
-    Click Element    ${COMMON.BUTTON.NEXT}
-    # Fill Data Role Info: ' Organization: View All Organizations',Position: View All Positions,Legislative Data Group: View All Legislative Data Groups,Person: View All People,Public Person: View All People,Document Type: View All Document Types,Payroll Flow: View All Flows
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.ORGANIZATION_SECURITY_PROFILE}    View All Organizations
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.POSITION_SECURITY_PROFILE}    View All Positions
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.LEGISLATIVE_DATA_GROUP}    View All Legislative Data Groups
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PERSON}    View All People
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PUBLIC_PERSON}    View All People
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.DOCUMENT_TYPE}    View All Document Types
-    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PAYROLL_FLOW}    View All Flows
-    Click Element    ${COMMON.BUTTON.NEXT}
-    # Veripy pages content
-    Verify Page    Assign Security Profiles to Role: Organization Security Profile    ${ORGANIZATION.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Verify Page    Assign Security Profiles to Role: Position Security Profile    ${POSITION.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Verify Page    Assign Security Profiles to Role: Legislative Data Group Security Profile    ${LEGISLATIVE_DATA_GROUP.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Verify Page    Assign Security Profiles to Role: Person Security Profile    ${PERSON.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Verify Page    Assign Security Profiles to Role: Public Person Security Profile    ${PUBLIC_PERSON.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Verify Page    Assign Security Profiles to Role: Document Type Security Profile    ${DOCUMENT_TYPE.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Verify Page    Assign Security Profiles to Role: Payroll Flow Security Profile    ${PAYROLL_FLOW.ELEMENT.VALUE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    # Submit data
-    Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
-    # Logout Oralce
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+
+    ${sheet_name}=    Set Variable    case2-Create-HCM-Data-Roles
+    ${r_cnt}    Get Row Count    ${sheet_name}
+
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${job_role}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${role_description}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${organization}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    ${position}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
+    \    ${legislative_data_group}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
+    \    ${person}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
+    \    ${public_person}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
+    \    ${document_type}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r}
+    \    ${payroll_flow}    Read Cell Data By Coordinates    ${sheet_name}    9    ${r}
+    \    Sleep    5s
+    \    Log To Console    this is ${r} with user ${role_name},${job_role},${role_description},${organization}
+    # Click button [Create Role]
+    \    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
+    \    Run Keyword And Ignore Error    Create HCM Data Role    ${role_name}    ${job_role}    ${role_description}    ${organization}    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}    ${payroll_flow}
+    \    Sleep    5s
+
     Logout Oracle
 
 03 Create Migration User Account
@@ -316,4 +306,38 @@ Create Custom Job Role
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.OK} 
 
-
+Create HCM Data Role
+    [Arguments]    ${role_name}    ${job_role}    ${role_description}    ${organization}    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}    ${payroll_flow}
+    # Create Custom Role
+    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
+    Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.DATA_ROLE}    ${role_name}
+    Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.JOB_ROLE}    ${job_role}
+    Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.ROLE_DESCRIPTION}    ${role_description}
+    Click Element    ${COMMON.BUTTON.NEXT}
+    # Fill Data Role Info: ' Organization: View All Organizations',Position: View All Positions,Legislative Data Group: View All Legislative Data Groups,Person: View All People,Public Person: View All People,Document Type: View All Document Types,Payroll Flow: View All Flows
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.ORGANIZATION_SECURITY_PROFILE}    ${organization}
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.POSITION_SECURITY_PROFILE}    ${position}
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.LEGISLATIVE_DATA_GROUP}    ${legislative_data_group}
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PERSON}    ${person}
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PUBLIC_PERSON}    ${public_person}
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.DOCUMENT_TYPE}    ${document_type}
+    Wait Exists And Input Text    ${SECURITY_CRITERIA.TEXT.PAYROLL_FLOW}    ${payroll_flow}
+    Click Element    ${COMMON.BUTTON.NEXT}
+    # Veripy pages content
+    Verify Page    Assign Security Profiles to Role: Organization Security Profile    ${organization}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Verify Page    Assign Security Profiles to Role: Position Security Profile    ${position}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Verify Page    Assign Security Profiles to Role: Legislative Data Group Security Profile    ${legislative_data_group}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Verify Page    Assign Security Profiles to Role: Person Security Profile    ${person}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Verify Page    Assign Security Profiles to Role: Public Person Security Profile    ${public_person}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Verify Page    Assign Security Profiles to Role: Document Type Security Profile    ${document_type}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Verify Page    Assign Security Profiles to Role: Payroll Flow Security Profile    ${payroll_flow}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    # Submit data
+    Verify Page    Create Data Role: Review    ${payroll_flow}
+    Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}

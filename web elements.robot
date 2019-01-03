@@ -131,4 +131,3 @@ ${CREATE_ROLE_PAGE.BUTTON.OK}    //div[text()='The role changes were saved.']/an
 
 
 
-
