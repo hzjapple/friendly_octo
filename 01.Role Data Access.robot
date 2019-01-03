@@ -2,7 +2,15 @@
 Suite Teardown    CloseDriverserver
 Library           SeleniumLibrary    timeout=30s    implicit_wait=2s
 Resource          resource.robot
+Library           OperatingSystem
+Library           ExcelLibrary
 Library           String
+Library           Dialogs
+Library           List
+
+*** Variables ***
+${unit_excel_file}    Unit_DT.xls
+${E2E_excel_file}    E2E_DT.xls
 
 *** Test Cases ***
 01 Create Custom Job Roles
@@ -127,7 +135,8 @@ Library           String
 14 Create Dashboard User Account
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    Navigator To Link    Setup and Maintenance
+    #Navigator To Link    Setup and Maintenance
+    Sleep    10s
     # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
     Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
     Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
@@ -138,17 +147,18 @@ Library           String
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
     Wait Until Page Contains    Manage Data Access for Users
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
-    #Wait Exists And Input Text    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
+ 
     #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
     # Add data access to Role with unit
-    Grant Data Access to User Role    RDC1Dashboard1    Accounts Payable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    Grant Data Access to User Role    RDC2Dashboard2    Employee    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Add another role
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
-    #Sleep    15s
-    Grant Data Access to User Role    RDC1Dashboard1    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    Sleep    15s
+    Grant Data Access to User Role    RDC2Dashboard2    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    
     # Logout Oralce
     Logout Oracle
 
@@ -204,15 +214,15 @@ Library           String
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
     Wait Until Page Contains    Manage Data Access for Users
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
-    #Wait Exists And Input Text    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
+
     #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
     # Add data access to Role with unit
-    Grant Data Access to User Role    RDC1Dashboard1    Accounts Payable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    Grant Data Access to User Role    RDC2Dashboard2    Employee    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Add another role
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
-    #Sleep    15s
-    Grant Data Access to User Role    RDC1Dashboard1    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    Sleep    10s
+    Grant Data Access to User Role    RDC2Dashboard2    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce
@@ -247,3 +257,48 @@ Library           String
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce
     Logout Oracle
+
+*** Keywords ***
+Fill Web Locator
+    [Arguments]    ${web_page}    ${type}    ${alias}    ${xpath}
+    Wait Exists And Input Text    (//span[text()="Web Page*"]/../../following-sibling::*)[1]//input    ${web_page}
+    Wait Exists And Input Text    //span[text()="Type*"]/../../following-sibling::*//input    ${type}
+    Wait Exists And Input Text    //span[text()="Alias*"]/../../following-sibling::*//input    ${alias}
+    Wait Exists And Input Text    //span[text()="XPath"]/../../following-sibling::*//input    ${xpath}
+
+Add Role
+    [Arguments]    ${role_name}    ${role_code}
+    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    ${role_name}
+    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
+    ${dynamic_role_code_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    replace_role_code    ${role_code}   
+    Wait Exists And Click Element    ${dynamic_role_code_xpath}
+    Sleep    2s
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+
+Grant Data Access to User Role
+    [Arguments]    ${user_name}    ${role_name}    ${security_context}    ${security_context_value}
+    Wait Until Page Contains    Create Data Access for Users
+    # Input user name
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}
+    ${input_name}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${user_name}'
+    Execute Javascript    ${input_name}
+    Sleep    2s
+    # Input user role by click dropdown list and cannot use javascript because the value will become null wihout knowing why. 
+    ${dynamic_role_name_xpath}=    Replace String    ${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    replace_role_name    ${role_name} 
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_LIST}
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_MORE}
+    Wait Exists And Input Text    ${SERACH_USER_ROLE_PAGE.TEXT_ROLE_NAME}    ${role_name}    10
+    Wait Exists And Click Element    ${SERACH_USER_ROLE_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${dynamic_role_name_xpath}
+    Wait Exists And Click Element    ${SERACH_USER_ROLE_PAGE.BUTTON.OK}
+    Sleep    2s
+
+    # Select Security Context
+    Select From List By Label   ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
+
+    Sleep    2s
+    ${input_security_context_value}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${security_context_value}'
+    Execute Javascript    ${input_security_context_value}
+    Sleep    2s
+

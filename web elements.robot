@@ -121,5 +121,13 @@ ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    (//label[text()='Securi
 ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}    (//label[text()='Security Context Value']/preceding-sibling::input)[1]
 ${CREATE_USER_PAGE.BUTTON.SAVE_AND_CLOSE}    //span[text()='Save and Close']
 ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}    //img[@title = 'Add Row' or @alt='Add Row']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_LIST}    //a[@title='Search: Role']
+${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_MORE}    //a[text()='Search...' and not(ancestor::div[@style="display:none"])]
+${SERACH_USER_ROLE_PAGE.TEXT_ROLE_NAME}    //table[.//div[text()='Search and Select: Role']]//label[text()='Role']/../following-sibling::*//input[not(ancestor::div[@style="display:none"])]
+${SERACH_USER_ROLE_PAGE.BUTTON.SEARCH}    //table[.//div[text()='Search and Select: Role']]//button[text()='Search']
+${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    //table[.//div[text()='Search and Select: Role']]//span[text()='replace_role_name']
+${SERACH_USER_ROLE_PAGE.BUTTON.OK}    //table[.//div[text()='Search and Select: Role']]//button[text()='OK']
+
+
 
 

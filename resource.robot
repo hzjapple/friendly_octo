@@ -168,36 +168,3 @@ Wait Until Element Be Clicked
     \    Sleep    1s
     \    Exit For Loop If    ${element count}==0
     \    Run Keyword If    ${element count}>0    Wait Exists And Click Element    ${xpath}
-
-
-Add Role
-    [Arguments]    ${role_name}    ${role_code}
-    Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    ${role_name}
-    Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
-    ${dynamic_role_code_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    replace_role_code    ${role_code}   
-    Wait Exists And Click Element    ${dynamic_role_code_xpath}
-    Sleep    2s
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
-
-Grant Data Access to User Role
-    [Arguments]    ${user_name}    ${role_name}    ${security_context}    ${security_context_value}
-    Wait Until Page Contains    Create Data Access for Users
-    # Input user name
-    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}
-    ${input_name}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${user_name}'
-    Execute Javascript    ${input_name}
-
-    # Verify user name
-    ${dynamic_verify_user_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_VERIVY}    verify_user_name_to_be_replaced    ${user_name}
-    Wait Until Page Contains Element    ${dynamic_verify_user_name_xpath}
-
-    ${input_role}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${role_name}'
-    Execute Javascript    ${input_role}
-
-    # Select Security Context
-    Select From List By Label   ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
-
-    #Sleep    15s
-    ${input_security_context_value}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${security_context_value}'
-    Execute Javascript    ${input_security_context_value}
