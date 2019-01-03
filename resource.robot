@@ -183,25 +183,21 @@ Add Role
 Grant Data Access to User Role
     [Arguments]    ${user_name}    ${role_name}    ${security_context}    ${security_context_value}
     Wait Until Page Contains    Create Data Access for Users
-    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
     # Input user name
-    Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}    ${user_name}
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}
+    ${input_name}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${user_name}'
+    Execute Javascript    ${input_name}
+
     # Verify user name
-    #${dynamic_verify_user_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_VERIVY}    verify_user_name_to_be_replaced    ${user_name}
-    #Wait Until Page Contains Element    ${dynamic_verify_user_name_xpath}
-    # Click user name from dropdown list
-    #${dynamic_user_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_ITEM}    data_access_user_name_to_be_replaced    ${user_name}
-    #Wait Exists And Click Element    ${dynamic_user_name_xpath}
-    # design method to avlid sleep
-    Sleep    15s
-    Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE}    ${role_name}
-    ${dynamic_role_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_ITEM}    data_access_role_name_to_be_replaced    ${role_name}
-    Wait Exists And Click Element    ${dynamic_role_name_xpath}
+    ${dynamic_verify_user_name_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME_VERIVY}    verify_user_name_to_be_replaced    ${user_name}
+    Wait Until Page Contains Element    ${dynamic_verify_user_name_xpath}
 
-    Sleep    15s
+    ${input_role}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${role_name}'
+    Execute Javascript    ${input_role}
+
+    # Select Security Context
     Select From List By Label   ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
-    Sleep    15s
-    Wait Exists And Input Text    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}    ${security_context_value}
-    ${dynamic_security_context_value_xpath}=    Replace String    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.CONTEXT_SECURITY_VALUE_ITEM}    data_access_security_context_value_to_be_replaced    ${security_context_value}
-    Wait Exists And Click Element    ${dynamic_security_context_value_xpath} 
 
+    #Sleep    15s
+    ${input_security_context_value}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${security_context_value}'
+    Execute Javascript    ${input_security_context_value}

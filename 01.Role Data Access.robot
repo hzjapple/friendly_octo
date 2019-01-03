@@ -1,6 +1,6 @@
 *** Settings ***
 Suite Teardown    CloseDriverserver
-Library           Selenium2Library    timeout=30s    implicit_wait=2s
+Library           SeleniumLibrary    timeout=30s    implicit_wait=2s
 Resource          resource.robot
 Library           String
 
@@ -124,6 +124,34 @@ Library           String
     # Logout Oralce
     Logout Oracle
 
+14 Create Dashboard User Account
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Login Oracle    ${ACCOUNT}    ${PASSWORD}
+    Navigator To Link    Setup and Maintenance
+    # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
+    Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
+    Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
+    Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
+    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
+    Wait Exists And Input Text    ${SETUP.TEXT.SEARCH_TASK}    Manage Data Access for Users
+    Wait Exists And Click Element    ${SETUP.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
+    Wait Until Page Contains    Manage Data Access for Users
+    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
+    #Wait Exists And Input Text    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
+    #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
+    # Add data access to Role with unit
+    Grant Data Access to User Role    RDC1Dashboard1    Accounts Payable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    # Add another role
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
+    #Sleep    15s
+    Grant Data Access to User Role    RDC1Dashboard1    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    # Save role and then close
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Logout Oralce
+    Logout Oracle
+
 04 Create Dashboard User Account
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
@@ -136,8 +164,8 @@ Library           String
     Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.USER_NAME}    RDCDashboard
     Wait Exists And Click Element    ${CREATE_USER_PAGE.LIST.PERSON_TYPE_LIST}
     Wait Exists And Click Element    ${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    US1 Legal Entity    20    #PG US West cannot be found
-    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    BU1    #11000 cannot be found
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    MS_HIA_CORP    20    #PG US West cannot be found
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    DELWP2 BU1    #11000 cannot be found
     Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.EMAIL}    chaitanya.jain@pwc.com
     # Save and Close
     Wait Exists And Click Element    ${CREATE_USER_PAGE.BUTTON.SAVE_AND_CLOSE}
@@ -164,7 +192,7 @@ Library           String
     Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-        # Step 7 - Grant access role
+    # Step 7 - Grant access role
     Navigator To Link    Setup and Maintenance
     # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
     Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
@@ -180,8 +208,11 @@ Library           String
     #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
     # Add data access to Role with unit
-    Grant Data Access to User Role    RDCDashboard    Accounts Payable Manager    Business unit    PWC US BU    # PwC South Africa cannot be found
-    Grant Data Access to User Role    RDCDashboard    Accounts Receivable Manager    Business unit    PWC US BU    # PwC South Africa cannot be found
+    Grant Data Access to User Role    RDC1Dashboard1    Accounts Payable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
+    # Add another role
+    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
+    #Sleep    15s
+    Grant Data Access to User Role    RDC1Dashboard1    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce
