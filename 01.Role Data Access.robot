@@ -76,7 +76,48 @@ ${role_excel_file}    custom_role_info.xls
 
     Logout Oracle
 
-03 Create Migration User Account
+03 Create Migration User Accounts
+    Open Chrome Browser    ${ORACLE URL}
+    Login Oracle    ${ACCOUNT}    ${PASSWORD}
+    Navigator To Link    Security Console
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    # Add User and fill information
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+
+    ${sheet_name}=    Set Variable    case3-Create-Migration-User-Acc
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${new_user}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${first_name}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${last_name}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${email}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
+    \    ${password}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
+    \    ${confirm_password}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
+    \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
+    \    ${role_code}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r}
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}+1
+    \    Sleep    5s
+    \    Log To Console    this is ${r} with user ${new_user},${role_name},${role_code}
+    # Add New User
+    \    Run Keyword If   '${new_user}'=='Yes'    Create Migration User Account - Add User    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
+    # Open Add Roles page
+    \    Run Keyword If   '${new_user}'=='Yes'    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    \    Add Role    ${role_name}    ${role_code}
+    \    Sleep    5s
+    \    Run Keyword If   '${role_complete}'=='Yes'    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
+    \    Run Keyword If   '${role_complete}'=='Yes'    Wait Until Element Be Clicked    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+
+    # For last user Add Roles are completed and then click Done button to back Edit page
+    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
+    # For last user Save role and then close
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Logout Oralce
+    Logout Oracle
+
+13 Create Migration User Account
     Open Chrome Browser    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Security Console
@@ -341,3 +382,14 @@ Create HCM Data Role
     # Submit data
     Verify Page    Create Data Role: Review    ${payroll_flow}
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
+
+Create Migration User Account - Add User
+    # Add User and fill information
+    [Arguments]    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.ADD_USER_ACCOUNT}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.FIRST_NAME}    ${first_name}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.LAST_NAME}    ${last_name}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.EMAIL}    ${email}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.USER_NAME}    ${user_name}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    ${password}
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    ${confirm_password}
