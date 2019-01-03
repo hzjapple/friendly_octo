@@ -28,7 +28,7 @@ ${CREATE_ROLE_PAGE.LABEL.ROLE_HIERARCHY}    //h1[contains(text(), "Role Hierarch
 ${CREATE_ROLE_PAGE.LABEL.SUMMARY}    //h1[contains(text(), "Summary")]
 ${CREATE_ROLE_PAGE.LABEL.USERS}    //h1[contains(text(), "Users")]
 ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}    //label[text()="Role Category"]/../following-sibling::*//input[not(@type="hidden")]
-${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}    //div[@class="AFPopupMenuPopup"]//li
+${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}    //div[@class="AFPopupMenuPopup"]//li[text()='role_category_to_be_replaced']
 ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    //label[text()="Role Code"]/../following-sibling::*//input
 ${CREATE_ROLE_PAGE.TEXT.ROLE_MEMBERSHIP_SEARCH}    //label[text()="Search"]/..//input
 ${CREATE_ROLE_PAGE.TEXT.ROLE_NAME}    //label[text()="Role Name"]/../following-sibling::*//input
@@ -127,6 +127,7 @@ ${SERACH_USER_ROLE_PAGE.TEXT_ROLE_NAME}    //table[.//div[text()='Search and Sel
 ${SERACH_USER_ROLE_PAGE.BUTTON.SEARCH}    //table[.//div[text()='Search and Select: Role']]//button[text()='Search']
 ${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    //table[.//div[text()='Search and Select: Role']]//span[text()='replace_role_name']
 ${SERACH_USER_ROLE_PAGE.BUTTON.OK}    //table[.//div[text()='Search and Select: Role']]//button[text()='OK']
+${CREATE_ROLE_PAGE.BUTTON.OK}    //div[text()='The role changes were saved.']/ancestor::tr//button[text()='OK']
 
 
 

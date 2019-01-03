@@ -9,8 +9,8 @@ Library           Dialogs
 Library           List
 
 *** Variables ***
-${unit_excel_file}    Unit_DT.xls
-${E2E_excel_file}    E2E_DT.xls
+${role_excel_file}    custom_role_info.xls
+
 
 *** Test Cases ***
 01 Create Custom Job Roles
@@ -20,41 +20,26 @@ ${E2E_excel_file}    E2E_DT.xls
     # Go to page: Security Console
     Navigator To Link    Security Console
     Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
-    # Click button [Create Role]
-    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
-    # Fill "Role Name", "Role Code", "Role Category"
-    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_NAME}    PwC Custom View Custom Infolet
-    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    PWC_CUSTOM_VIEW_CUSTOM_INFOLET4
-    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}
-    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}[text()="Common - Job Roles"]
-    # Click [Next] until "Role Hierarchy" tab
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.FUNCTION_SECURITY_POLICIES}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.DATA_SECURITY_POLICIES}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.ROLE_HIERARCHY}
-    # Add Role Membership
-    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE}
-    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.ADD_ROLE_MEMBERSHIP}
-    # Search Role Membership
-    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_MEMBERSHIP_SEARCH}    BI Administrator Role
-    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.SEARCH}
-    ${dynamic_xpath}=    Replace String    ${CREATE_ROLE_PAGE.DIV.SEARCH_RESULT}    to_be_replaced    BI Administrator Role
-    Wait Exists And Click Element    ${dynamic_xpath}
-    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    # Click Ok and Next Until Save and Close
-    Wait Exists And Click Element    ${COMMON.BUTTON.OK}
-    Wait Until Page Does Not Contain Element    ${COMMON.LABEL.CONFIRMATION}
-    Click Element Until Deleted From Page    ${COMMON.BUTTON.DIALOG_CLOSE}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.USERS}
-    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
-    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.SUMMARY}
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+
+    ${sheet_name}=    Set Variable    case1-Create-HCM-Data-Role
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${role_code}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${role_category}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${role_membership}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    Sleep    5s
+    \    Log To Console    this is ${r} with user ${role_name},${role_code},${role_category},${role_membership}
+             # Click button [Create Role]
+    \    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
+    \    Run Keyword And Ignore Error    Create Custom Job Role    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
+    \    Sleep    5s
+
     Logout Oracle
 
-02 Create HCM Data Role
+02 Create HCM Data Roles
     #Open Chrome Browser    ${ORACLE URL}
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     # Login Oracle
@@ -259,13 +244,6 @@ ${E2E_excel_file}    E2E_DT.xls
     Logout Oracle
 
 *** Keywords ***
-Fill Web Locator
-    [Arguments]    ${web_page}    ${type}    ${alias}    ${xpath}
-    Wait Exists And Input Text    (//span[text()="Web Page*"]/../../following-sibling::*)[1]//input    ${web_page}
-    Wait Exists And Input Text    //span[text()="Type*"]/../../following-sibling::*//input    ${type}
-    Wait Exists And Input Text    //span[text()="Alias*"]/../../following-sibling::*//input    ${alias}
-    Wait Exists And Input Text    //span[text()="XPath"]/../../following-sibling::*//input    ${xpath}
-
 Add Role
     [Arguments]    ${role_name}    ${role_code}
     Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    ${role_name}
@@ -301,4 +279,41 @@ Grant Data Access to User Role
     ${input_security_context_value}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${security_context_value}'
     Execute Javascript    ${input_security_context_value}
     Sleep    2s
+
+Create Custom Job Role
+    [Arguments]    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
+    # Fill "Role Name", "Role Code", "Role Category"
+    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_NAME}    ${role_name}
+    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    ${role_code}
+    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}
+
+    ${dynamic_role_category_xpath}=    Replace String    ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}    role_category_to_be_replaced    ${role_category}   
+    Wait Exists And Click Element    ${dynamic_role_category_xpath}
+    # Click [Next] until "Role Hierarchy" tab
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.FUNCTION_SECURITY_POLICIES}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.DATA_SECURITY_POLICIES}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.ROLE_HIERARCHY}
+    # Add Role Membership
+    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE}
+    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.ADD_ROLE_MEMBERSHIP}
+    # Search Role Membership
+    Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_MEMBERSHIP_SEARCH}    ${role_membership}
+    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.SEARCH}
+    ${dynamic_xpath}=    Replace String    ${CREATE_ROLE_PAGE.DIV.SEARCH_RESULT}    to_be_replaced    ${role_membership}
+    Wait Exists And Click Element    ${dynamic_xpath}
+    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    # Click Ok and Next Until Save and Close
+    Wait Exists And Click Element    ${COMMON.BUTTON.OK}
+    Wait Until Page Does Not Contain Element    ${COMMON.LABEL.CONFIRMATION}
+    Click Element Until Deleted From Page    ${COMMON.BUTTON.DIALOG_CLOSE}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.USERS}
+    Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
+    Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.SUMMARY}
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.OK} 
+
 
