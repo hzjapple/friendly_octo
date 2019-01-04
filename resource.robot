@@ -158,13 +158,3 @@ Verify Page
     [Arguments]    ${page title}    ${page element value}
     Wait Until Page Contains    ${page title}
     Wait Until Page Contains    ${page element value}
-
-Wait Until Element Be Clicked
-    [Arguments]    ${xpath}
-    # If element exist, click it.
-    Wait Exists And Click Element    ${xpath}
-    : FOR    ${i}    IN RANGE    1    5
-    \    ${element count}=    Get Element Count    ${xpath}    # Check if element exists
-    \    Sleep    1s
-    \    Exit For Loop If    ${element count}==0
-    \    Run Keyword If    ${element count}>0    Wait Exists And Click Element    ${xpath}

@@ -128,6 +128,8 @@ ${SERACH_USER_ROLE_PAGE.BUTTON.SEARCH}    //table[.//div[text()='Search and Sele
 ${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    //table[.//div[text()='Search and Select: Role']]//span[text()='replace_role_name']
 ${SERACH_USER_ROLE_PAGE.BUTTON.OK}    //table[.//div[text()='Search and Select: Role']]//button[text()='OK']
 ${CREATE_ROLE_PAGE.BUTTON.OK}    //div[text()='The role changes were saved.']/ancestor::tr//button[text()='OK']
+${SECURITY_CONSOLE_WARNING.BUTTON.OK}    //div[text()='Warning']/ancestor::tr//button[text()='OK']
+${USER_ACCOUNT_PAGE.BUTTON.OK}    //div[text()='Confirmation']/ancestor::tr//button[text()='OK']
 
 
 

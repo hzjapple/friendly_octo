@@ -6,7 +6,7 @@ Library           OperatingSystem
 Library           ExcelLibrary
 Library           String
 Library           Dialogs
-Library           List
+
 
 *** Variables ***
 ${role_excel_file}    custom_role_info.xls
@@ -81,6 +81,7 @@ ${role_excel_file}    custom_role_info.xls
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Security Console
     Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
     # Add User and fill information
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
     # Open Excel file
@@ -88,65 +89,29 @@ ${role_excel_file}    custom_role_info.xls
 
     ${sheet_name}=    Set Variable    case3-Create-Migration-User-Acc
     ${r_cnt}    Get Row Count    ${sheet_name}
+    ${r_len}=    Evaluate    ${r_cnt} - 1
     : FOR    ${r}    IN RANGE    1    ${r_cnt}
-    \    ${new_user}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
-    \    ${first_name}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
-    \    ${last_name}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
-    \    ${email}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
-    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
-    \    ${password}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
-    \    ${confirm_password}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
-    \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
-    \    ${role_code}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r}
-    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}+1
-    \    Sleep    5s
-    \    Log To Console    this is ${r} with user ${new_user},${role_name},${role_code}
-    # Add New User
-    \    Run Keyword If   '${new_user}'=='Yes'    Create Migration User Account - Add User    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
-    # Open Add Roles page
-    \    Run Keyword If   '${new_user}'=='Yes'    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    \    ${first_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${last_name}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${email}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    ${password}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
+    \    ${confirm_password}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
+    \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
+    \    ${role_code}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    Log To Console    this is ${r} with user ${first_name},${last_name},${role_name},${role_code}
+    # Add New User and Role
+    \    Run Keyword Unless   '${first_name}'==''    Create Migration User Account - Add User    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
+    \    Run Keyword Unless   '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     \    Add Role    ${role_name}    ${role_code}
-    \    Sleep    5s
-    \    Run Keyword If   '${role_complete}'=='Yes'    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
-    \    Run Keyword If   '${role_complete}'=='Yes'    Wait Until Element Be Clicked    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-
-    # For last user Add Roles are completed and then click Done button to back Edit page
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
-    # For last user Save role and then close
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    # Logout Oralce
-    Logout Oracle
-
-13 Create Migration User Account
-    Open Chrome Browser    ${ORACLE URL}
-    Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    Navigator To Link    Security Console
-    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
-    # Add User and fill information
-    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
-    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.ADD_USER_ACCOUNT}
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.FIRST_NAME}    RDC
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.LAST_NAME}    Analyst
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.EMAIL}    nita.ye@pwc.com
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.USER_NAME}    RDCAnalyst
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    Welcome1
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    Welcome1
-    # Open Add Roles page
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
-    # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
-    Add Role    Employee    ORA_PER_EMPLOYEE_ABSTRACT
-    # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
-    Add Role    Application Implementation Consultant    ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB
-    # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
-    Add Role    PwC Custom BI Administrator Role    PWC_CUSTOM_BI_ADMINISTRATOR_ROLE
-    # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
-    Add Role    PwC Custom View Custom Infolet    PWC_CUSTOM_VIEW_CUSTOM_INFOLET
-    # Add Roles are completed and then click Done button to back Edit page
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
-    # Save role and then close
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    # Logout Oralce
-    Logout Oracle
+    # Add Role Complete and save user with last row
+    \    Run Keyword If    ${r}==${r_len}    Create Migration User Accounts - Save User
+    \    Run Keyword If    ${r}==${r_len}    Exit For Loop
+    # Add Role Complete for current user when there are other users to be added.
+    \    ${r_more_one}=    Evaluate    ${r} + 1    
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
+    \    Run Keyword Unless   '${role_complete}'==''    Create Migration User Accounts - Save User
 
 14 Create Dashboard User Account
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
@@ -215,7 +180,7 @@ ${role_excel_file}    custom_role_info.xls
     # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
     Add Role    PwC Custom View Custom Infolet    PWC_CUSTOM_VIEW_CUSTOM_INFOLET
     # Add Roles are completed and then click Done button to back Edit page
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
+    Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Step 7 - Grant access role
@@ -268,7 +233,7 @@ ${role_excel_file}    custom_role_info.xls
     # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
     Add Role    PwC Custom BI Administrator Role    PWC_CUSTOM_BI_ADMINISTRATOR_ROLE
     # Add Roles are completed and then click Done button to back Edit page
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.DONE}
+    Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce
@@ -283,7 +248,7 @@ Add Role
     Wait Exists And Click Element    ${dynamic_role_code_xpath}
     Sleep    2s
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
-    Wait Until Element Be Clicked    ${COMMON.BUTTON.OK}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.OK}
 
 Grant Data Access to User Role
     [Arguments]    ${user_name}    ${role_name}    ${security_context}    ${security_context_value}
@@ -393,3 +358,9 @@ Create Migration User Account - Add User
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.USER_NAME}    ${user_name}
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    ${password}
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    ${confirm_password}
+
+Create Migration User Accounts - Save User
+    Log To Console    Role complete
+    # For last user Add Roles are completed and then click Done button to back Edit page
+    Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
+    # For last user Save role and then close
