@@ -7,10 +7,8 @@ Library           ExcelLibrary
 Library           String
 Library           Dialogs
 
-
 *** Variables ***
 ${role_excel_file}    custom_role_info.xls
-
 
 *** Test Cases ***
 01 Create Custom Job Roles
@@ -22,7 +20,6 @@ ${role_excel_file}    custom_role_info.xls
     Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
     # Open Excel file
     Open Excel    ${role_excel_file}
-
     ${sheet_name}=    Set Variable    case1-Create-Custom-Job-Role
     ${r_cnt}    Get Row Count    ${sheet_name}
     : FOR    ${r}    IN RANGE    1    ${r_cnt}
@@ -32,11 +29,10 @@ ${role_excel_file}    custom_role_info.xls
     \    ${role_membership}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
     \    Sleep    5s
     \    Log To Console    this is ${r} with user ${role_name},${role_code},${role_category},${role_membership}
-             # Click button [Create Role]
+    # Click button [Create Role]
     \    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
     \    Run Keyword And Ignore Error    Create Custom Job Role    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
     \    Sleep    5s
-
     Logout Oracle
 
 02 Create HCM Data Roles
@@ -52,10 +48,8 @@ ${role_excel_file}    custom_role_info.xls
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ROLE_AND_SECURITY_PROFILES}    10
     # Open Excel file
     Open Excel    ${role_excel_file}
-
     ${sheet_name}=    Set Variable    case2-Create-HCM-Data-Roles
     ${r_cnt}    Get Row Count    ${sheet_name}
-
     : FOR    ${r}    IN RANGE    1    ${r_cnt}
     \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
     \    ${job_role}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
@@ -71,22 +65,25 @@ ${role_excel_file}    custom_role_info.xls
     \    Log To Console    this is ${r} with user ${role_name},${job_role},${role_description},${organization}
     # Click button [Create Role]
     \    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
-    \    Run Keyword And Ignore Error    Create HCM Data Role    ${role_name}    ${job_role}    ${role_description}    ${organization}    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}    ${payroll_flow}
+    \    Run Keyword And Ignore Error    Create HCM Data Role    ${role_name}    ${job_role}    ${role_description}    ${organization}
+    \    ...    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}
+    \    ...    ${payroll_flow}
     \    Sleep    5s
-
     Logout Oracle
 
 03 Create Migration User Accounts
     Open Chrome Browser    ${ORACLE URL}
+    # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
+    # Go to page: Security Console
     Navigator To Link    Security Console
-    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    # Click OK button if warning pop up
     Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
     # Add User and fill information
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
     # Open Excel file
     Open Excel    ${role_excel_file}
-
     ${sheet_name}=    Set Variable    case3-Create-Migration-User-Acc
     ${r_cnt}    Get Row Count    ${sheet_name}
     ${r_len}=    Evaluate    ${r_cnt} - 1
@@ -102,22 +99,81 @@ ${role_excel_file}    custom_role_info.xls
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    Log To Console    this is ${r} with user ${first_name},${last_name},${role_name},${role_code}
     # Add New User and Role
-    \    Run Keyword Unless   '${first_name}'==''    Create Migration User Account - Add User    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
-    \    Run Keyword Unless   '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    \    Run Keyword Unless    '${first_name}'==''    Create User Account - Add User    ${first_name}    ${last_name}    ${email}
+    \    ...    ${user_name}    ${password}    ${confirm_password}
+    \    Run Keyword Unless    '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     \    Add Role    ${role_name}    ${role_code}
     # Add Role Complete and save user with last row
-    \    Run Keyword If    ${r}==${r_len}    Create Migration User Accounts - Save User
+    \    Run Keyword If    ${r}==${r_len}    Create User Account - Save User
     \    Run Keyword If    ${r}==${r_len}    Exit For Loop
     # Add Role Complete for current user when there are other users to be added.
-    \    ${r_more_one}=    Evaluate    ${r} + 1    
+    \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
-    \    Run Keyword Unless   '${role_complete}'==''    Create Migration User Accounts - Save User
+    \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
 
 14 Create Dashboard User Account
+
+
+
+24 Create Dashboard User Account
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
-    #Navigator To Link    Setup and Maintenance
-    Sleep    10s
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+    ${sheet_name}=    Set Variable    case4-Create-Dashboard-Usr
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    ${r_len}=    Evaluate    ${r_cnt} - 1
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${last_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${first_name}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${person_type}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    ${legal_employer}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
+    \    ${business_unit}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
+    \    ${email}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
+    \    ${add_role_name}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
+    \    ${add_role_code}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r}
+    \    ${assign_data_access_role_name}    Read Cell Data By Coordinates    ${sheet_name}    9    ${r}
+    \    ${assign_data_access_security_context}    Read Cell Data By Coordinates    ${sheet_name}    10    ${r}
+    \    ${assign_data_access_security_context_value}    Read Cell Data By Coordinates    ${sheet_name}    11    ${r}
+    \    Log To Console    this is ${r} with user ${first_name},${last_name},${add_role_name},${assign_data_access_role_name}
+    # Add New User
+    \    Run Keyword Unless    '${last_name}'==''    Log To Console    Create Dashboard User Account - Add Person
+    \    Run Keyword Unless    '${last_name}'==''    Log To Console    Create Dashboard User Account - Navigate to Add Role Page
+    # Add first role
+    \    Run Keyword Unless    '${last_name}'==''    Log To Console    Add Role ${add_role_name},${add_role_code}
+    # Assign data access complete and save user with last row
+    \    Run Keyword If    ${r}==${r_len}    Log To Console    Wait Exists And Click Element,${COMMON.BUTTON.SAVE_AND_CLOSE}
+    \    Run Keyword If    ${r}==${r_len}    Exit For Loop
+    # Add Role Complete for current user when there are other data access to be assigned.
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    9    ${r_more_one}
+    \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
+    # Open Edit Roles page
+    Navigator To Link    Security Console
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+    # Search Users
+    Wait Until Page Contains    User Accounts
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.SEARCH_USER_NAME}    RDCDashboard
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.LINK.USER}
+    Wait Until Page Contains    User Account Details: Dashboard RDC
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.EDIT}
+    # Open Add Roles page
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
+    Add Role    Employee    ORA_PER_EMPLOYEE_ABSTRACT
+    # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
+    Add Role    Application Implementation Consultant    ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB
+    # Add Role - PwC Custom View Custom Infolet with code 'PWC_CUSTOM_VIEW_CUSTOM_INFOLET'
+    Add Role    PwC Custom View Custom Infolet    PWC_CUSTOM_VIEW_CUSTOM_INFOLET
+    # Add Roles are completed and then click Done button to back Edit page
+    Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
+    # Save role and then close
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Step 7 - Grant access role
+    Navigator To Link    Setup and Maintenance
     # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
     Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
     Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
@@ -128,18 +184,16 @@ ${role_excel_file}    custom_role_info.xls
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
     Wait Until Page Contains    Manage Data Access for Users
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
- 
     #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
     # Add data access to Role with unit
     Grant Data Access to User Role    RDC2Dashboard2    Employee    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Add another role
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
-    Sleep    15s
+    Sleep    10s
     Grant Data Access to User Role    RDC2Dashboard2    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
     # Save role and then close
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    
     # Logout Oralce
     Logout Oracle
 
@@ -147,6 +201,8 @@ ${role_excel_file}    custom_role_info.xls
     Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Users and Roles
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
     # Add person
     Wait Exists And Click Element    ${SEARCH_PERSON.BUTTON.CREATE_PERSON}
     Wait Until Page Contains    Create User
@@ -195,7 +251,6 @@ ${role_excel_file}    custom_role_info.xls
     Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
     Wait Until Page Contains    Manage Data Access for Users
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
-
     #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
     # Add data access to Role with unit
@@ -210,41 +265,51 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 05 Create RDCConversion User Account
-    #Open Chrome Browser    ${ORACLE URL}
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
+    # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
+    # Go to page: Security Console
     Navigator To Link    Security Console
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
     Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
     # Add User and fill information
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
-    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.ADD_USER_ACCOUNT}
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.FIRST_NAME}    RDC
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.LAST_NAME}    Conversion
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.EMAIL}    chaitanya.jain@pwc.com
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.USER_NAME}    RDCConversion
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    Welcome1
-    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    Welcome1
-    # Open Add Roles page
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
-    # Add Role - Employee with code 'ORA_PER_EMPLOYEE_ABSTRACT'
-    Add Role    Employee    ORA_PER_EMPLOYEE_ABSTRACT
-    # Add Role - Application Implementation Consultant with code 'ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB'
-    Add Role    Application Implementation Consultant    ORA_ASM_APPLICATION_IMPLEMENTATION_CONSULTANT_JOB
-    # Add Role - PwC Custom BI Administrator Role with code 'PWC_CUSTOM_BI_ADMINISTRATOR_ROLE'
-    Add Role    PwC Custom BI Administrator Role    PWC_CUSTOM_BI_ADMINISTRATOR_ROLE
-    # Add Roles are completed and then click Done button to back Edit page
-    Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
-    # Save role and then close
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    # Logout Oralce
-    Logout Oracle
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+    ${sheet_name}=    Set Variable    case5-Create-RDCConversion-User
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    ${r_len}=    Evaluate    ${r_cnt} - 1
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${first_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${last_name}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${email}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    ${password}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
+    \    ${confirm_password}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
+    \    ${role_name}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
+    \    ${role_code}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    Log To Console    this is ${r} with user ${first_name},${last_name},${role_name},${role_code}
+    # Add New User and Role
+    \    Run Keyword Unless    '${first_name}'==''    Create User Account - Add User    ${first_name}    ${last_name}    ${email}
+    \    ...    ${user_name}    ${password}    ${confirm_password}
+    \    Run Keyword Unless    '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+    \    Add Role    ${role_name}    ${role_code}
+    # Add Role Complete and save user with last row
+    \    Run Keyword If    ${r}==${r_len}    Create User Account - Save User
+    \    Run Keyword If    ${r}==${r_len}    Exit For Loop
+    # Add Role Complete for current user when there are other users to be added.
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
+    \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
 
 *** Keywords ***
 Add Role
     [Arguments]    ${role_name}    ${role_code}
     Wait Exists And Input Text    ${ADD_ROLE_MEMBERSHIP_PAGE.TEXT.ROLE}    ${role_name}
     Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
-    ${dynamic_role_code_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    replace_role_code    ${role_code}   
+    ${dynamic_role_code_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    replace_role_code    ${role_code}
     Wait Exists And Click Element    ${dynamic_role_code_xpath}
     Sleep    2s
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
@@ -258,8 +323,8 @@ Grant Data Access to User Role
     ${input_name}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${user_name}'
     Execute Javascript    ${input_name}
     Sleep    2s
-    # Input user role by click dropdown list and cannot use javascript because the value will become null wihout knowing why. 
-    ${dynamic_role_name_xpath}=    Replace String    ${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    replace_role_name    ${role_name} 
+    # Input user role by click dropdown list and cannot use javascript because the value will become null wihout knowing why.
+    ${dynamic_role_name_xpath}=    Replace String    ${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    replace_role_name    ${role_name}
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_LIST}
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_MORE}
     Wait Exists And Input Text    ${SERACH_USER_ROLE_PAGE.TEXT_ROLE_NAME}    ${role_name}    10
@@ -267,10 +332,8 @@ Grant Data Access to User Role
     Wait Exists And Click Element    ${dynamic_role_name_xpath}
     Wait Exists And Click Element    ${SERACH_USER_ROLE_PAGE.BUTTON.OK}
     Sleep    2s
-
     # Select Security Context
-    Select From List By Label   ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
-
+    Select From List By Label    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
     Sleep    2s
     ${input_security_context_value}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${security_context_value}'
     Execute Javascript    ${input_security_context_value}
@@ -282,8 +345,7 @@ Create Custom Job Role
     Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_NAME}    ${role_name}
     Wait Exists And Input Text    ${CREATE_ROLE_PAGE.TEXT.ROLE_CODE}    ${role_code}
     Wait Exists And Click Element    ${CREATE_ROLE_PAGE.LIST.ROLE_CATEGORY_EXPAND}
-
-    ${dynamic_role_category_xpath}=    Replace String    ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}    role_category_to_be_replaced    ${role_category}   
+    ${dynamic_role_category_xpath}=    Replace String    ${CREATE_ROLE_PAGE.LIST_ITEM.ROLE_CATEGORY}    role_category_to_be_replaced    ${role_category}
     Wait Exists And Click Element    ${dynamic_role_category_xpath}
     # Click [Next] until "Role Hierarchy" tab
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
@@ -310,10 +372,11 @@ Create Custom Job Role
     Wait Exists And Click Element    ${COMMON.BUTTON.NEXT}
     Wait Until Element Is Visible    ${CREATE_ROLE_PAGE.LABEL.SUMMARY}
     Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
-    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.OK} 
+    Wait Exists And Click Element    ${CREATE_ROLE_PAGE.BUTTON.OK}
 
 Create HCM Data Role
-    [Arguments]    ${role_name}    ${job_role}    ${role_description}    ${organization}    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}    ${payroll_flow}
+    [Arguments]    ${role_name}    ${job_role}    ${role_description}    ${organization}    ${position}    ${legislative_data_group}
+    ...    ${person}    ${public_person}    ${document_type}    ${payroll_flow}
     # Create Custom Role
     Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
     Wait Exists And Input Text    ${CREATE_DATA_ROLE.TEXT.DATA_ROLE}    ${role_name}
@@ -348,9 +411,9 @@ Create HCM Data Role
     Verify Page    Create Data Role: Review    ${payroll_flow}
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
 
-Create Migration User Account - Add User
-    # Add User and fill information
+Create User Account - Add User
     [Arguments]    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
+    # Add User and fill information
     Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.ADD_USER_ACCOUNT}
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.FIRST_NAME}    ${first_name}
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.LAST_NAME}    ${last_name}
@@ -359,8 +422,68 @@ Create Migration User Account - Add User
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.PASSWORD}    ${password}
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.CONFIRM_PASSWORD}    ${confirm_password}
 
-Create Migration User Accounts - Save User
+Create User Account - Save User
     Log To Console    Role complete
     # For last user Add Roles are completed and then click Done button to back Edit page
     Wait Exists And Click Element    ${COMMON.BUTTON.DONE}
     # For last user Save role and then close
+    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+
+Create Dashboard User Account - Add Person
+    [Arguments]    ${first_name}    ${last_name}    ${user_name}    ${person_type}    ${legal_employer}    ${business_unit}
+    ...    ${email}
+    Navigator To Link    Users and Roles
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
+    # Add person
+    Wait Exists And Click Element    ${SEARCH_PERSON.BUTTON.CREATE_PERSON}
+    Wait Until Page Contains    Create User
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LAST_NAME}    ${last_name}
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.FIRST_NAME}    ${first_name}
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.USER_NAME}    ${user_name}
+    Wait Exists And Click Element    ${CREATE_USER_PAGE.LIST.PERSON_TYPE_LIST}
+    ${dynamic_person_type_xpath}=    Replace String    ${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}    replace_person_type    ${person_type}
+    Wait Exists And Click Element    ${dynamic_person_type_xpath}
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    ${legal_employer}    20    #PG US West cannot be found
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    ${business_unit}    #11000 cannot be found
+    Wait Exists And Input Text    ${CREATE_USER_PAGE.TEXT.EMAIL}    ${email}
+    # Save and Close
+    Wait Exists And Click Element    ${CREATE_USER_PAGE.BUTTON.SAVE_AND_CLOSE}
+
+Create Dashboard User Account - Navigate to Add Role Page
+    [Arguments]    ${user_name}
+    # Open Edit Roles page
+    Navigator To Link    Security Console
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
+    # Navigate to Users
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+    # Search Users
+    Wait Until Page Contains    User Accounts
+    Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.SEARCH_USER_NAME}    ${user_name}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.LINK.USER}
+    Wait Until Page Contains    User Account Details
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.EDIT}
+    # Open Add Roles page
+    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
+
+Create Dashboard User Account - Navigate to Assign Data Access Page
+    # Step 7 - Grant access role
+    Navigator To Link    Setup and Maintenance
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
+    # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
+    Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
+    Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
+    Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
+    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
+    Wait Exists And Input Text    ${SETUP.TEXT.SEARCH_TASK}    Manage Data Access for Users
+    Wait Exists And Click Element    ${SETUP.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
+    Wait Until Page Contains    Manage Data Access for Users
+    # Click Add Data Access button
+    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
+    #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
+    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
