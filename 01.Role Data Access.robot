@@ -122,7 +122,7 @@ ${role_excel_file}    custom_role_info.xls
     Sleep    5s
     Create Dashboard User Account - Roles    case4-Create-Dashboard-Usr
     # Add Data Access
-    Sleep    5s
+    Sleep    10s
     Create Dashboard User Account - Data Access    case4-Create-Dashboard-Usr
     # Logout Oralce
     Logout Oracle  
