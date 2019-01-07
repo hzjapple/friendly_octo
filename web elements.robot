@@ -96,13 +96,13 @@ ${CREATE_USER_PAGE.TEXT.FIRST_NAME}    //label[text()='First Name']/../following
 ${CREATE_USER_PAGE.TEXT.USER_NAME}    //label[text()='User Name']/../following-sibling::*//input
 ${CREATE_USER_PAGE.TEXT.PERSON_TYPE}    //label[text()='Person Type']/../following-sibling::*//input
 ${CREATE_USER_PAGE.LIST.PERSON_TYPE_LIST}    //label[text()='Person Type']/../following-sibling::*//a
-${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}    //li[text()='Employee']
+${CREATE_USER_PAGE.TEXT.PERSON_TYPE_ITEM}    //li[text()='replace_person_type']
 ${CREATE_USER_PAGE.TEXT.LEGAL_EMPLOYER}    //label[text()='Legal Employer']/../following-sibling::*//input
 ${CREATE_USER_PAGE.TEXT.BUSINESS_UNIT}    //label[text()='Business Unit']/../following-sibling::*//input
 ${CREATE_USER_PAGE.TEXT.EMAIL}    //label[text()='Email']/../following-sibling::*//input
 ${USER_ACCOUNT_PAGE.TEXT.SEARCH_USER_NAME}    //label[text()='Search']/preceding-sibling::input
 ${USER_ACCOUNT_PAGE.BUTTON.SEARCH}    //img[@title ='Search' or @alt='Search']
-${USER_ACCOUNT_PAGE.LINK.USER}    //a[text()='Dashboard RDC']
+${USER_ACCOUNT_PAGE.LINK.USER}    //a[text()='user_link_to_replace']
 ${USER_ACCOUNT_PAGE.BUTTON.EDIT}    //button[text()='Edit']
 ${USER_ACCOUNT_PAGE.TEXT.ORA_AP_ACCOUNTS_PAYABLE_MANAGER_JOB_ROLE_CODE}    //td[text()='ORA_AP_ACCOUNTS_PAYABLE_MANAGER_JOB']
 ${USER_ACCOUNT_PAGE.TEXT.ORA_GL_GENERAL_ACCOUNTING_MANAGER_JOB_ROLE_CODE}    //td[text()='ORA_GL_GENERAL_ACCOUNTING_MANAGER_JOB']

@@ -104,8 +104,8 @@ ${role_excel_file}    custom_role_info.xls
     \    Run Keyword Unless    '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     \    Add Role    ${role_name}    ${role_code}
     # Add Role Complete and save user with last row
-    \    Run Keyword If    ${r}==${r_len}    Create User Account - Save User
-    \    Run Keyword If    ${r}==${r_len}    Exit For Loop
+    \    Run Keyword If    '${role_name}'=='    Create User Account - Save User
+    \    Run Keyword If    '${role_name}'=='    Exit For Loop
     # Add Role Complete for current user when there are other users to be added.
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
@@ -196,32 +196,36 @@ ${role_excel_file}    custom_role_info.xls
     ${sheet_name}=    Set Variable    case4-Create-Dashboard-Usr
     ${r_cnt}    Get Row Count    ${sheet_name}
     ${r_len}=    Evaluate    ${r_cnt} - 1
-    # Open Edit Roles page
-    Navigator To Link    Security Console
-    # Click OK button if warning pop up
-    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
-    # Navigate to Users
-    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
-    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+    # Assign Data Access to user
+    # Navigate to Manage Data Access for Users 
+    Create Dashboard User Account - Navigate to Assign Data Access Page
+    ${new_user_name}=    Set Variable    ''
 
-    # Add Role
     : FOR    ${r}    IN RANGE    1    ${r_cnt}
-    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r}
-    \    ${add_role_name}    Read Cell Data By Coordinates    ${sheet_name}    9    ${r}
-    \    ${add_role_code}    Read Cell Data By Coordinates    ${sheet_name}    10    ${r}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    12    ${r}
+    \    ${assign_data_access_role_name}    Read Cell Data By Coordinates    ${sheet_name}    13    ${r}
+    \    ${assign_data_access_security_context}    Read Cell Data By Coordinates    ${sheet_name}    14    ${r}
+    \    ${assign_data_access_security_context_value}    Read Cell Data By Coordinates    ${sheet_name}    15    ${r}
+
+    \    Exit For Loop If    '${assign_data_access_role_name}'==''
     \    Log To Console    this is ${r} with user ${user_name}
-    \    Exit For Loop If    '${add_role_name}'==''
     # Add New User
-    \    Run Keyword Unless    '${user_name}'==''  Log To Console    Create Dashboard User Account - Navigate to Add Role Page,${user_name}
-    # Add first role for user
-    \    Log To Console    Add Role,${add_role_name},${add_role_code}
-    # Add Role Complete for all users and save user with last row
-    \    Run Keyword If    '${add_role_name}'==''    Log To Console    Create User Account - Save User
-    \    Run Keyword If    '${add_role_name}'==''    Log To Console    Exit For Loop
-    # Add Role Complete for current user when there are other users to be added.
+    \    Run Keyword Unless    '${user_name}'==''  Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
+    \    ${new_user_name}=    Set Variable If    '${user_name}'==''    ${new_user_name}    ${user_name}
+    # Add first data access to user with unit
+    \    Grant Data Access to User Role    ${new_user_name}    ${assign_data_access_role_name}    ${assign_data_access_security_context}    ${assign_data_access_security_context_value}
+    # Add data access Complete for all users and save user with last row
+    \    Run Keyword If    '${assign_data_access_role_name}'==''    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    \    Run Keyword If    '${assign_data_access_role_name}'==''    Exit For Loop
+    # Add data access Complete for current user when there are other users to be added.
     \    ${r_more_one}=    Evaluate    ${r} + 1
-    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r_more_one}
-    \    Run Keyword Unless    '${role_complete}'==''    Log To Console    Create User Account - Save User
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    12    ${r_more_one}
+    \    ${user_complete}    Read Cell Data By Coordinates    ${sheet_name}    13    ${r_more_one}
+    \    ${user_complete_not_null}=    Get Length    ${user_complete}
+    # Add another data access for current user
+    \    Run Keyword If    '${role_complete}'=='' and ${user_complete_not_null} > 0    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
+    \    Sleep    10s
+    \    Run Keyword Unless    '${role_complete}'==''    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
  
 
 04 Create Dashboard User Account
@@ -251,6 +255,8 @@ ${role_excel_file}    custom_role_info.xls
     # Add New User
     \    Run Keyword Unless    '${user_name}'==''    Create Dashboard User Account - Add Person    ${first_name}    ${last_name}    ${user_name}    ${person_type}    ${legal_employer}    ${business_unit}    ${email}
 
+    Sleep    5s
+
     # Open Edit Roles page
     Navigator To Link    Security Console
     # Click OK button if warning pop up
@@ -267,38 +273,48 @@ ${role_excel_file}    custom_role_info.xls
     \    Log To Console    this is ${r} with user ${user_name}
     \    Exit For Loop If    '${add_role_name}'==''
     # Add New User
-    \    Run Keyword Unless    '${user_name}'==''  Log To Console    Create Dashboard User Account - Navigate to Add Role Page,${user_name}
+    \    Run Keyword Unless    '${user_name}'==''    Create Dashboard User Account - Navigate to Add Role Page    ${user_name}
     # Add first role for user
-    \    Log To Console    Add Role,${add_role_name},${add_role_code}
+    \    Add Role    ${add_role_name}    ${add_role_code}
     # Add Role Complete for all users and save user with last row
-    \    Run Keyword If    '${add_role_name}'==''    Log To Console    Create User Account - Save User
-    \    Run Keyword If    '${add_role_name}'==''    Log To Console    Exit For Loop
+    \    Run Keyword If    '${add_role_name}'==''    Create User Account - Save User
+    \    Run Keyword If    '${add_role_name}'==''    Exit For Loop
     # Add Role Complete for current user when there are other users to be added.
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r_more_one}
-    \    Run Keyword Unless    '${role_complete}'==''    Log To Console    Create User Account - Save User
+    \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
+
+    Sleep    5s
     # Step 7 - Grant access role
-    Navigator To Link    Setup and Maintenance
-    # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
-    Wait Exists And Click Element    ${SETUP.LIST.SETUP_EXPAND}
-    Wait Exists And Click Element    ${SETUP.LIST_ITEM.SETUP_ITEM}
-    Wait Until Page Contains Element    ${SETUP.ELEMENT.FINANCIAL_LOAD}
-    Wait Exists And Click Element    ${SETUP.ELEMENT.USERS_AND_ROLE_SECURITY}
-    Wait Exists And Input Text    ${SETUP.TEXT.SEARCH_TASK}    Manage Data Access for Users
-    Wait Exists And Click Element    ${SETUP.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${SETUP.ELEMENT.MANAGE_DATA_ACCESS_AND_USERS}
-    Wait Until Page Contains    Manage Data Access for Users
-    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
-    #Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
-    # Add data access to Role with unit
-    Grant Data Access to User Role    RDC2Dashboard2    Employee    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
-    # Add another role
-    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
-    Sleep    10s
-    Grant Data Access to User Role    RDC2Dashboard2    Accounts Receivable Manager    Business unit    DELWP2 BU1    # PwC South Africa cannot be found
-    # Save role and then close
-    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    # Navigate to Manage Data Access for Users 
+    Create Dashboard User Account - Navigate to Assign Data Access Page
+    ${new_user_name}=    Set Variable    ''
+
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    12    ${r}
+    \    ${assign_data_access_role_name}    Read Cell Data By Coordinates    ${sheet_name}    13    ${r}
+    \    ${assign_data_access_security_context}    Read Cell Data By Coordinates    ${sheet_name}    14    ${r}
+    \    ${assign_data_access_security_context_value}    Read Cell Data By Coordinates    ${sheet_name}    15    ${r}
+
+    \    Exit For Loop If    '${assign_data_access_role_name}'==''
+    \    Log To Console    this is ${r} with user ${user_name}
+    # Add New User
+    \    Run Keyword Unless    '${user_name}'==''  Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
+    \    ${new_user_name}=    Set Variable If    '${user_name}'==''    ${new_user_name}    ${user_name}
+    # Add first data access to user with unit
+    \    Grant Data Access to User Role    ${new_user_name}    ${assign_data_access_role_name}    ${assign_data_access_security_context}    ${assign_data_access_security_context_value}
+    # Add data access Complete for all users and save user with last row
+    \    Run Keyword If    '${assign_data_access_role_name}'==''    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    \    Run Keyword If    '${assign_data_access_role_name}'==''    Exit For Loop
+    # Add data access Complete for current user when there are other users to be added.
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    12    ${r_more_one}
+    \    ${user_complete}    Read Cell Data By Coordinates    ${sheet_name}    13    ${r_more_one}
+    \    ${user_complete_not_null}=    Get Length    ${user_complete}
+    # Add another data access for current user
+    \    Run Keyword If    '${role_complete}'=='' and ${user_complete_not_null} > 0    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
+    \    Sleep    10s
+    \    Run Keyword Unless    '${role_complete}'==''    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
     # Logout Oralce
     Logout Oracle
 
@@ -335,8 +351,8 @@ ${role_excel_file}    custom_role_info.xls
     \    Run Keyword Unless    '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     \    Add Role    ${role_name}    ${role_code}
     # Add Role Complete and save user with last row
-    \    Run Keyword If    ${r}==${r_len}    Create User Account - Save User
-    \    Run Keyword If    ${r}==${r_len}    Exit For Loop
+    \    Run Keyword If    '${role_name}'=='    Create User Account - Save User
+    \    Run Keyword If    '${role_name}'=='    Exit For Loop
     # Add Role Complete for current user when there are other users to be added.
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
@@ -493,7 +509,9 @@ Create Dashboard User Account - Navigate to Add Role Page
     Wait Until Page Contains    User Accounts
     Wait Exists And Input Text    ${USER_ACCOUNT_PAGE.TEXT.SEARCH_USER_NAME}    ${user_name}
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.SEARCH}
-    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.LINK.USER}
+    ${dynamic_user_name_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.LINK.USER}    user_link_to_replace    ${user_name}
+    
+    Wait Exists And Click Element    ${dynamic_user_name_xpath}
     Wait Until Page Contains    User Account Details
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.EDIT}
     # Open Add Roles page
@@ -516,3 +534,101 @@ Create Dashboard User Account - Navigate to Assign Data Access Page
     # Click Add Data Access button
     Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.USERACCESS}
 
+
+Create Dashboard User Account - Persons
+    [Arguments]    ${sheet_name}
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+    #${sheet_name}=    Set Variable    case4-Create-Dashboard-Usr
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    ${r_len}=    Evaluate    ${r_cnt} - 1
+    
+    # Navigate to add Users
+    Navigator To Link    Users and Roles
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
+    # Add Person
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${last_name}    Read Cell Data By Coordinates    ${sheet_name}    0    ${r}
+    \    ${first_name}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    2    ${r}
+    \    ${person_type}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
+    \    ${legal_employer}    Read Cell Data By Coordinates    ${sheet_name}    4    ${r}
+    \    ${business_unit}    Read Cell Data By Coordinates    ${sheet_name}    5    ${r}
+    \    ${email}    Read Cell Data By Coordinates    ${sheet_name}    6    ${r}
+    \    Log To Console    this is ${r} with user ${user_name}
+    \    Exit For Loop If    '${user_name}'==''
+    # Add New User
+    \    Run Keyword Unless    '${user_name}'==''    Create Dashboard User Account - Add Person    ${first_name}    ${last_name}    ${user_name}    ${person_type}    ${legal_employer}    ${business_unit}    ${email}
+
+Create Dashboard User Account - Roles
+    [Arguments]    ${sheet_name}
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+    #${sheet_name}=    Set Variable    case4-Create-Dashboard-Usr
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    ${r_len}=    Evaluate    ${r_cnt} - 1
+    # Open Edit Roles page
+    Navigator To Link    Security Console
+    # Click OK button if warning pop up
+    Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
+    # Navigate to Users
+    Wait Exists And Click Element    ${SECURITY_TOOL_BAR.BUTTON.SECURITY_CONSOLE}
+    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.USERS}
+
+    # Add Role
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r}
+    \    ${add_role_name}    Read Cell Data By Coordinates    ${sheet_name}    9    ${r}
+    \    ${add_role_code}    Read Cell Data By Coordinates    ${sheet_name}    10    ${r}
+    \    Log To Console    this is ${r} with user ${user_name}
+    \    Exit For Loop If    '${add_role_name}'==''
+    # Add New User
+    \    Run Keyword Unless    '${user_name}'==''    Create Dashboard User Account - Navigate to Add Role Page    ${user_name}
+    # Add first role for user
+    \    Add Role    ${add_role_name}    ${add_role_code}
+    # Add Role Complete for all users and save user with last row
+    \    Run Keyword If    '${add_role_name}'==''    Create User Account - Save User
+    \    Run Keyword If    '${add_role_name}'==''    Exit For Loop
+    # Add Role Complete for current user when there are other users to be added.
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r_more_one}
+    \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
+
+Create Dashboard User Account - Data Access
+    [Arguments]    ${sheet_name}
+    # Open Excel file
+    Open Excel    ${role_excel_file}
+    #${sheet_name}=    Set Variable    case4-Create-Dashboard-Usr
+    ${r_cnt}    Get Row Count    ${sheet_name}
+    ${r_len}=    Evaluate    ${r_cnt} - 1
+    # Step 7 - Grant access role
+    # Navigate to Manage Data Access for Users 
+    Create Dashboard User Account - Navigate to Assign Data Access Page
+    ${new_user_name}=    Set Variable    ''
+
+    : FOR    ${r}    IN RANGE    1    ${r_cnt}
+    \    ${user_name}    Read Cell Data By Coordinates    ${sheet_name}    12    ${r}
+    \    ${assign_data_access_role_name}    Read Cell Data By Coordinates    ${sheet_name}    13    ${r}
+    \    ${assign_data_access_security_context}    Read Cell Data By Coordinates    ${sheet_name}    14    ${r}
+    \    ${assign_data_access_security_context_value}    Read Cell Data By Coordinates    ${sheet_name}    15    ${r}
+
+    \    Exit For Loop If    '${assign_data_access_role_name}'==''
+    \    Log To Console    this is ${r} with user ${user_name}
+    # Add New User
+    \    Run Keyword Unless    '${user_name}'==''  Wait Exists And Click Element    ${MANAGE_DATA_ACCESS_AND_USERS_PAGE.BUTTON.CREATE}
+    \    ${new_user_name}=    Set Variable If    '${user_name}'==''    ${new_user_name}    ${user_name}
+    # Add first data access to user with unit
+    \    Grant Data Access to User Role    ${new_user_name}    ${assign_data_access_role_name}    ${assign_data_access_security_context}    ${assign_data_access_security_context_value}
+    # Add data access Complete for all users and save user with last row
+    \    Run Keyword If    '${assign_data_access_role_name}'==''    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
+    \    Run Keyword If    '${assign_data_access_role_name}'==''    Exit For Loop
+    # Add data access Complete for current user when there are other users to be added.
+    \    ${r_more_one}=    Evaluate    ${r} + 1
+    \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    12    ${r_more_one}
+    \    ${user_complete}    Read Cell Data By Coordinates    ${sheet_name}    13    ${r_more_one}
+    \    ${user_complete_not_null}=    Get Length    ${user_complete}
+    # Add another data access for current user
+    \    Run Keyword If    '${role_complete}'=='' and ${user_complete_not_null} > 0    Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.BUTTON.ADD_ROW}
+    \    Sleep    10s
+    \    Run Keyword Unless    '${role_complete}'==''    Wait Exists And Click Element    ${COMMON.BUTTON.SAVE_AND_CLOSE}
