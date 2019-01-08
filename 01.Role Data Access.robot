@@ -98,18 +98,22 @@ ${role_excel_file}    custom_role_info.xls
     \    ${role_code}    Read Cell Data By Coordinates    ${sheet_name}    7    ${r}
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    Log To Console    this is ${r} with user ${first_name},${last_name},${role_name},${role_code}
+        # Add Role Complete and save user with last row in case r_len is more than actual rows
+    \    Run Keyword If    '${role_name}'==''    Create User Account - Save User
+    \    Run Keyword If    '${role_name}'==''    Exit For Loop
     # Add New User and Role
     \    Run Keyword Unless    '${first_name}'==''    Create User Account - Add User    ${first_name}    ${last_name}    ${email}
     \    ...    ${user_name}    ${password}    ${confirm_password}
     \    Run Keyword Unless    '${first_name}'==''    Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE}
     \    Add Role    ${role_name}    ${role_code}
-    # Add Role Complete and save user with last row
-    \    Run Keyword If    '${role_name}'=='    Create User Account - Save User
-    \    Run Keyword If    '${role_name}'=='    Exit For Loop
+    # Add Role Complete and save user with last row in case r_len is same with actual rows
+    \    Run Keyword If    ${r}==${r_len}    Create User Account - Save User
+    \    Run Keyword If    ${r}==${r_len}    Exit For Loop
     # Add Role Complete for current user when there are other users to be added.
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
     \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
+
     # Logout Oralce
     Logout Oracle
 
@@ -125,7 +129,7 @@ ${role_excel_file}    custom_role_info.xls
     Sleep    10s
     Create Dashboard User Account - Data Access    case4-Create-Dashboard-Usr
     # Logout Oralce
-    Logout Oracle  
+    Logout Oracle
 
 05 Create RDCConversion User Account
     Open Chrome Browser    ${ORACLE URL}
