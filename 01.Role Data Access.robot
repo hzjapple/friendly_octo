@@ -29,14 +29,15 @@ ${role_excel_file}    custom_role_info.xls
     \    ${role_membership}    Read Cell Data By Coordinates    ${sheet_name}    3    ${r}
     \    Sleep    5s
     \    Log To Console    this is ${r} with user ${role_name},${role_code},${role_category},${role_membership}
+    \    Run Keyword If    '${role_name}'==''    Exit For Loop
     # Click button [Create Role]
     \    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
-    \    Run Keyword And Ignore Error    Create Custom Job Role    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
+    \    Run Keyword    Create Custom Job Role    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
     \    Sleep    5s
     Logout Oracle
 
 02 Create HCM Data Roles
-    Open Chrome Browser    ${ORACLE URL}
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Setup and Maintenance
@@ -63,9 +64,10 @@ ${role_excel_file}    custom_role_info.xls
     \    ${payroll_flow}    Read Cell Data By Coordinates    ${sheet_name}    9    ${r}
     \    Sleep    5s
     \    Log To Console    this is ${r} with user ${role_name},${job_role},${role_description},${organization}
+    \    Run Keyword If    '${role_name}'==''    Exit For Loop
     # Click button [Create Role]
     \    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.CREATE}
-    \    Run Keyword And Ignore Error    Create HCM Data Role    ${role_name}    ${job_role}    ${role_description}    ${organization}
+    \    Run Keyword    Create HCM Data Role    ${role_name}    ${job_role}    ${role_description}    ${organization}
     \    ...    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}
     \    ...    ${payroll_flow}
     \    Sleep    5s
@@ -283,6 +285,15 @@ Create HCM Data Role
     # Submit data
     Verify Page    Create Data Role: Review    ${payroll_flow}
     Wait Exists And Click Element    ${COMMON.BUTTON.SUBMIT}
+
+    # Search the role to ensure its status is 'Requested'
+    Wait Until Page Does Not Contain Element    ${COMMON.BUTTON.SUBMIT}    120
+    Wait Exists And Input Text    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_ROLE}    ${role_name}    60
+    Wait Exists And Click Element    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.BUTTON.SEARCH}
+    ${dynamic_manage_role_name_result_path}=    Replace String    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.SEARCH_RESULT}    manage_data_role_name_to_be_replace    ${role_name}
+    Wait Until Page Contains Element     ${dynamic_manage_role_name_result_path}
+    ${dynamic_manage_role_status_path}=    Replace String    ${MANAGE_DATA_ROLE_AND_SECURITY_PROFILES.TEXT.ROLE_STATUS}    manage_data_role_status_to_be_replace    ${role_name}
+    Page Should Contain Element    ${dynamic_manage_role_status_path}
 
 Create User Account - Add User
     [Arguments]    ${first_name}    ${last_name}    ${email}    ${user_name}    ${password}    ${confirm_password}
