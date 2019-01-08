@@ -12,7 +12,7 @@ ${role_excel_file}    custom_role_info.xls
 
 *** Test Cases ***
 01 Create Custom Job Roles
-    Open Chrome Browser    ${ORACLE URL}
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Go to page: Security Console
@@ -74,7 +74,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 03 Create Migration User Accounts
-    Open Chrome Browser    ${ORACLE URL}
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Go to page: Security Console
@@ -134,7 +134,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 05 Create RDCConversion User Account
-    Open Chrome Browser    ${ORACLE URL}
+    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Go to page: Security Console
