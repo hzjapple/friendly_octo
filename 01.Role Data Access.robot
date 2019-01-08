@@ -423,7 +423,10 @@ Create Dashboard User Account - Roles
 Create Dashboard User Account - Data Access
     [Arguments]    ${sheet_name}
     # Step 7 - Grant access role
-    Navigator To Link    Setup and Maintenance
+    #Navigator To Link    Setup and Maintenance
+    Wait Exists And Click Element    ${COMMON.BUTTON.COMMON_MENUARROW_BTN}
+    Wait Exists And Click Element     //a[text()='Setup and Maintenance']
+
     # Click OK button if warning pop up
     Run Keyword And Ignore Error    Wait Exists And Click Element    ${SECURITY_CONSOLE_WARNING.BUTTON.OK}
     # Select the Users and Security Functional Areas, click the Manage Data Access for Users task.
