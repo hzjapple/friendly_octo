@@ -6,22 +6,22 @@ Resource          credential.txt
 
 *** Keywords ***
 Click Element Until Added To Page
-    [Arguments]    ${locator}    ${locator_added}    ${max retry}=30
+    [Arguments]    ${locator}    ${locator_added}    ${max retry}=30    ${wait}=1s
     # Retry 30 times by default
     : FOR    ${i}    IN RANGE    1    ${max retry}
     \    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}
     \    Run Keyword And Ignore Error    Click Element    ${locator}
-    \    Sleep    1s
+    \    Sleep    ${wait}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Page Should Contain Element    ${locator_added}
     \    Exit For Loop If    '${result}'=='PASS'
 
 Click Element Until Deleted From Page
-    [Arguments]    ${locator}    ${max retry}=30
+    [Arguments]    ${locator}    ${max retry}=30    ${wait}=1s
     # Retry 30 times by default
     : FOR    ${i}    IN RANGE    1    ${max retry}
     \    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}
     \    Run Keyword And Ignore Error    Click Element    ${locator}
-    \    Sleep    1s
+    \    Sleep    ${wait}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Page Should Not Contain Element    ${locator}
     \    Exit For Loop If    '${result}'=='PASS'
 
@@ -71,7 +71,7 @@ Open Chrome Browser
     [Arguments]    ${url}    ${width}=1600    ${height}=900
     Set Environment Variable    webdriver.chrome.driver    ${CHROME DRIVER}
     Open Browser    ${url}    browser=${BROWSER}
-    Set Window Size    ${width}    ${height}
+    Maximize Browser Window
     Go To    ${url}
 
 Open Chrome Headless
@@ -114,23 +114,26 @@ Scroll To Element
     Execute Javascript    window.scrollBy(${x}, ${y});
 
 Wait Exists And Click Element
-    [Arguments]    ${locator}
+    [Arguments]    ${locator}    ${time_out}=5
     # Wait and frontend loading exception handling
     Wait Until Page Contains Element    ${locator}
     #Wait Until Element Is Visible    ${locator}
-    : FOR    ${i}    IN RANGE    1    5
-    \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Click Element    ${locator}
-    \    Exit For Loop If    '${result}'=='PASS' or """StaleElementReferenceException""" not in """${returnvalue}"""
+    : FOR    ${i}    IN RANGE    1    ${time_out}
     \    Sleep    0.5
+    \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Click Element    ${locator}
+    \    Continue For Loop If    """StaleElementReferenceException""" in """${returnvalue}"""
+    \    Continue For Loop If    """ElementNotVisibleException""" in """${returnvalue}"""
+    \    Exit For Loop If    '${result}'=='PASS'
 
 Wait Exists And Input Text
-    [Arguments]    ${locator}    ${text}
+    [Arguments]    ${locator}    ${text}    ${time_out}=5
     # Wait and frontend loading exception handling
     Wait Until Page Contains Element    ${locator}
-    : FOR    ${i}    IN RANGE    1    5
+    : FOR    ${i}    IN RANGE    1    ${time_out}
     \    ${result}    ${returnvalue}    Run Keyword And Ignore Error    Input Text    ${locator}    ${text}
-    \    Exit For Loop If    '${result}'=='PASS' or """StaleElementReferenceException""" not in """${returnvalue}"""
-    \    Sleep    0.5
+    \    Continue For Loop If    """StaleElementReferenceException""" in """${returnvalue}"""
+    \    Continue For Loop If    """ElementNotVisibleException""" in """${returnvalue}"""
+    \    Exit For Loop If    '${result}'=='PASS'
 
 Wait Until File Download Complete
     [Arguments]    ${path}    ${filename}    ${timeout}=30
@@ -152,6 +155,6 @@ Open Chrome Browser With useAutomationExtension
     Go To    ${URL}
 
 Verify Page
-    [Arguments]    ${page_title}    ${page_element_locator}
-    Wait Until Page Contains    ${page_title}
-    Wait Until Page Contains Element    ${page_element_locator}
+    [Arguments]    ${page title}    ${page element value}
+    Wait Until Page Contains    ${page title}
+    Wait Until Page Contains    ${page element value}
