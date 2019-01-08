@@ -71,7 +71,7 @@ Open Chrome Browser
     [Arguments]    ${url}    ${width}=1600    ${height}=900
     Set Environment Variable    webdriver.chrome.driver    ${CHROME DRIVER}
     Open Browser    ${url}    browser=${BROWSER}
-    Set Window Size    ${width}    ${height}
+    Maximize Browser Window
     Go To    ${url}
 
 Open Chrome Headless

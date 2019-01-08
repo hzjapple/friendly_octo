@@ -12,7 +12,7 @@ ${role_excel_file}    custom_role_info.xls
 
 *** Test Cases ***
 01 Create Custom Job Roles
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Go to page: Security Console
@@ -37,7 +37,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 02 Create HCM Data Roles
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     Navigator To Link    Setup and Maintenance
@@ -74,7 +74,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 03 Create Migration User Accounts
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Go to page: Security Console
@@ -121,7 +121,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 04 Create Dashboard User Account
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Add Persons
     Create Dashboard User Account - Persons    case4-Create-Dashboard-Usr
@@ -135,7 +135,7 @@ ${role_excel_file}    custom_role_info.xls
     Logout Oracle
 
 05 Create RDCConversion User Account
-    Open Chrome Browser With useAutomationExtension    ${ORACLE URL}
+    Open Chrome Browser    ${ORACLE URL}
     # Login Oracle
     Login Oracle    ${ACCOUNT}    ${PASSWORD}
     # Go to page: Security Console
