@@ -33,7 +33,7 @@ ${role_excel_file}    custom_role_info.xls
     # Click button [Create Role]
     \    Wait Exists And Click Element    ${SECURITY_CONSOLE.BUTTON.CREATE_ROLE}
     \    Run Keyword    Create Custom Job Role    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
-    \    Sleep    5s
+    \    Sleep    15s
     Logout Oracle
 
 02 Create HCM Data Roles
@@ -70,7 +70,7 @@ ${role_excel_file}    custom_role_info.xls
     \    Run Keyword    Create HCM Data Role    ${role_name}    ${job_role}    ${role_description}    ${organization}
     \    ...    ${position}    ${legislative_data_group}    ${person}    ${public_person}    ${document_type}
     \    ...    ${payroll_flow}
-    \    Sleep    5s
+    \    Sleep    15s
     Logout Oracle
 
 03 Create Migration User Accounts
@@ -115,6 +115,7 @@ ${role_excel_file}    custom_role_info.xls
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
     \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
+    \    Sleep    30s
 
     # Logout Oralce
     Logout Oracle
@@ -125,10 +126,10 @@ ${role_excel_file}    custom_role_info.xls
     # Add Persons
     Create Dashboard User Account - Persons    case4-Create-Dashboard-Usr
     # Add Roles
-    Sleep    5s
+    Sleep    15s
     Create Dashboard User Account - Roles    case4-Create-Dashboard-Usr
     # Add Data Access
-    Sleep    10s
+    Sleep    15s
     Create Dashboard User Account - Data Access    case4-Create-Dashboard-Usr
     # Logout Oralce
     Logout Oracle
@@ -175,6 +176,7 @@ ${role_excel_file}    custom_role_info.xls
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    1    ${r_more_one}
     \    Run Keyword Unless    '${role_complete}'==''    Create User Account - Save User
+    \    Sleep    30s
 
     # Logout Oralce
     Logout Oracle
@@ -186,8 +188,9 @@ Add Role
     Wait Exists And Click Element    ${ADD_ROLE_MEMBERSHIP_PAGE.BUTTON.SEARCH}
     ${dynamic_role_code_xpath}=    Replace String    ${USER_ACCOUNT_PAGE.TEXT.ROLE_CODE}    replace_role_code    ${role_code}
     Wait Exists And Click Element    ${dynamic_role_code_xpath}
-    Sleep    2s
+    Sleep    5s
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.ADD_ROLE_MEMBERSHIP}
+    Sleep    5s
     Wait Exists And Click Element    ${USER_ACCOUNT_PAGE.BUTTON.OK}
 
 Grant Data Access to User Role
@@ -197,7 +200,7 @@ Grant Data Access to User Role
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}
     ${input_name}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.USER_NAME}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${user_name}'
     Execute Javascript    ${input_name}
-    Sleep    2s
+    Sleep    5s
     # Input user role by click dropdown list and cannot use javascript because the value will become null wihout knowing why.
     ${dynamic_role_name_xpath}=    Replace String    ${SERACH_USER_ROLE_PAGE.BUTTON.ROLE_NAME_ITEM}    replace_role_name    ${role_name}
     Wait Exists And Click Element    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.ROLE_NAME_LIST}
@@ -206,13 +209,13 @@ Grant Data Access to User Role
     Wait Exists And Click Element    ${SERACH_USER_ROLE_PAGE.BUTTON.SEARCH}
     Wait Exists And Click Element    ${dynamic_role_name_xpath}
     Wait Exists And Click Element    ${SERACH_USER_ROLE_PAGE.BUTTON.OK}
-    Sleep    2s
+    Sleep    5s
     # Select Security Context
     Select From List By Label    ${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT}    ${security_context}
-    Sleep    2s
+    Sleep    5s
     ${input_security_context_value}=    Set Variable    document.evaluate("${CREATE_DATA_ACCESS_FOR_USERS.TEXT.SECURITY_CONTEXT_VALUE}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value='${security_context_value}'
     Execute Javascript    ${input_security_context_value}
-    Sleep    2s
+    Sleep    5s
 
 Create Custom Job Role
     [Arguments]    ${role_name}    ${role_code}    ${role_category}    ${role_membership}
@@ -383,6 +386,7 @@ Create Dashboard User Account - Persons
     \    Exit For Loop If    '${user_name}'==''
     # Add New User
     \    Run Keyword Unless    '${user_name}'==''    Create Dashboard User Account - Add Person    ${first_name}    ${last_name}    ${user_name}    ${person_type}    ${legal_employer}    ${business_unit}    ${email}
+    \    Sleep    30s
 
 Create Dashboard User Account - Roles
     [Arguments]    ${sheet_name}
@@ -419,6 +423,7 @@ Create Dashboard User Account - Roles
     \    ${r_more_one}=    Evaluate    ${r} + 1
     \    ${role_complete}    Read Cell Data By Coordinates    ${sheet_name}    8    ${r_more_one}
     \    Run Keyword Unless    '${role_complete}'==''    Create Dashboard User Account - Save Role
+    \    Sleep    30s
 
 Create Dashboard User Account - Data Access
     [Arguments]    ${sheet_name}
